@@ -1,0 +1,110 @@
+        BYTE buffer[100];   // file copy buffer
+
+	FATFS fs;            // Work area (file system object) for logical drive
+	f_mount(0, &fs);
+
+	// ls /
+	{
+		char path[]="/\0";
+		FILINFO finfo;
+		DIR dirs;
+		int i;
+
+		if (f_opendir(&dirs, path) == FR_OK) 
+		{
+			i = strlen(path);
+			while ((f_readdir(&dirs, &finfo) == FR_OK) && finfo.fname[0]) 
+			{
+				if (finfo.fattrib & AM_DIR) {
+					uart_puts_P("Dir:  ");
+				} else {
+					uart_puts_P("File: ");
+				}
+				uart_puts(path);
+				uart_putc('/');
+				uart_puts(finfo.fname);
+				uart_eol();
+			}
+		}
+	}
+
+	// End ls /
+
+        // cat /00readme.txt
+	{
+		FIL fsrc;            // file objects
+		FRESULT res;         // FatFs function common result code
+		WORD br;             // File R/W count
+
+
+		// Open source file
+		res = f_open(&fsrc, "/00readme.txt", FA_OPEN_EXISTING | FA_READ);
+		if(res==0)
+		{
+
+			for (;;) 
+			{
+				res = f_read(&fsrc, buffer, sizeof(buffer)+1, &br);
+				if(br>0)
+				{
+					buffer[br]=0;
+					uart_puts(buffer);
+				}
+				if (res || br == 0) break;      // error or eof
+			}
+
+			// Close file
+			f_close(&fsrc);
+		}
+		else
+		{
+			uart_puts_P("File not found\r\n");
+		}
+
+	}
+
+        // End cat /00readme.txt
+
+
+	uart_eol();
+
+        // create /yellow.txt
+	{
+		FIL fsrc;            // file objects
+		FRESULT res;         // FatFs function common result code
+		WORD bw;             // File R/W count
+
+
+		// Open source file
+		res = f_open(&fsrc, "/yellow.txt", FA_CREATE_ALWAYS | FA_WRITE);
+		if(res==0)
+		{
+			strcpy(buffer,"Hullu Dies ist ein doller Test !!!!!\r\n");
+			for (uint16_t i=0;i<1000;i++) 
+			{
+				res = f_write(&fsrc, buffer, strlen(buffer), &bw);
+				if (res ) break;      // error 
+			}
+
+			// Close file
+			f_close(&fsrc);
+		}
+		else
+		{
+			uart_puts_P("File not created\r\n");
+		}
+
+	}
+	uart_puts_P("File created\r\n");
+
+        // End cat /00readme.txt
+
+
+
+	// Unregister a work area before discard it
+	f_mount(0, NULL);
+
+
+
+
+

@@ -1,0 +1,288 @@
+////////////////////////////////////////////////////////////
+//
+// mmc/sd library for Etherrape (www.lochraster.de)
+//
+// Based on mmc.c/h from Ulrich Radig (www.ulichradig.de)
+//
+// Adopted/stripped/enhanced for Etherrape by Udo Matthe
+//
+// Depends on:
+// - Etherrape spi library
+// - Etherrape uart library for debuging
+// - tick.c/h (delayms)
+//
+////////////////////////////////////////////////////////////
+
+#include "config.h"
+#include "../spi/spi.h"
+#ifdef DEBUGMMC
+#include "../uart/uart.h"
+#endif
+
+#include "mmc.h"
+#include "../timer/tick.h"
+
+#include <util/crc16.h>
+
+////////////////////////////
+// Initialize mmc/sd card //
+////////////////////////////
+uint8_t mmc_init( void )
+{
+	uint16_t retry;
+
+        
+#ifdef _MMC_CTRL_
+         _MMC_CTRL_DDR_ |= _BV(_MMC_ACTIVATE_);
+#endif
+        _MMC_DDR_ |= _BV(_MMC_Chip_Select_);
+	MMC_Disable();
+        MMC_On();
+
+
+        delayms(100);
+
+	// Send 128 clk
+	for (uint8_t b = 0;b<0x0f;b++)
+	{
+		spi_send(0xff);
+	}
+	
+        delayms(100);
+
+	// Send CMD0
+	retry = 0;
+	uint8_t CMD[] = {0x40,0x00,0x00,0x00,0x00,0x95};
+	while(mmc_write_command (CMD) !=1)
+	{
+		if (retry++ > 10)
+		{
+	                MMC_Disable();
+			return(1); 
+		}
+		delayms(50);
+	}
+
+	//Send CMD1
+	retry = 0;
+	CMD[0] = 0x41;
+	CMD[5] = 0xFF;
+	while( mmc_write_command (CMD) !=0)
+	{
+		if (retry++ > 10)
+		{
+	                MMC_Disable();
+			return(2);
+		}
+		delayms(200);
+	}
+
+        // Init succeeded:	
+	// set MMC_Chip_Select to high
+	MMC_Disable();
+	return(0);
+}
+
+//////////////
+// Send Cmd //
+//////////////
+uint8_t mmc_write_command (uint8_t *cmd)
+{
+	uint8_t tmp = 0xff;
+	uint16_t retry = 0;
+
+#ifdef DEBUGMMC
+	uart_puts_P("UMA: mmc cmd: ");
+	for(uint8_t i=0;i<6;i++)
+	{
+		uart_puthexbyte(cmd[i]);
+	}
+	uart_eol();
+#endif
+
+	//set MMC_Chip_Select to high 
+	MMC_Disable();
+
+	//send 8 clk
+	spi_send(0xff);
+
+	//set MMC_Chip_Select to low 
+	MMC_Enable();
+
+	//send Cmd
+	for (uint8_t a = 0;a<6;a++) 
+	{
+		spi_send(cmd[a]);
+	}
+
+	while (tmp == 0xff)	
+	{
+		tmp = spi_send(0xff);
+		if (retry++ > 500)
+		{
+			break; 
+		}
+	}
+	return(tmp);
+}
+
+//////////////////////////
+// Write 512 Byte block //
+//////////////////////////
+uint8_t mmc_write_sector (uint32_t blocknr,const uint8_t *Buffer)
+{
+	uint16_t crc16calc;
+	uint8_t tmp;
+	uint8_t cmd[] = {0x58,0x00,0x00,0x00,0x00,0xFF};    // Write cmd
+
+	// Calculate Byte Position from blocknr 
+	blocknr = blocknr << 9; 
+
+	cmd[1] = ((blocknr & 0xFF000000) >>24 );
+	cmd[2] = ((blocknr & 0x00FF0000) >>16 );
+	cmd[3] = ((blocknr & 0x0000FF00) >>8 );
+
+	if((tmp = mmc_write_command (cmd)) != 0)
+	{
+		return tmp;
+	}
+
+	// Send some clk
+	for (uint8_t a=0;a<100;a++)
+	{
+		spi_send(0xff);
+	}
+
+	//Send start transfer 
+	spi_send(0xfe);	
+
+	// Send Data	
+	for (uint16_t a=0;a<512;a++)
+	{
+		spi_send(Buffer[a]);
+		crc16calc=_crc_xmodem_update(crc16calc,Buffer[a]);
+	}
+
+	// send CRC word
+	spi_send(crc16calc>>8); 
+	spi_send(crc16calc&0xff); 
+
+	// Wait to complete transaction
+	while (spi_send(0xff) != 0xff);
+
+	//set MMC_Chip_Select to high 
+	MMC_Disable();
+
+	return 0;
+}
+
+/////////////////////////
+// Read 512 Byte Block //
+/////////////////////////
+uint8_t mmc_read_sector (uint32_t blocknr, uint8_t *Buffer)
+{	
+	uint8_t tmp;
+	uint16_t crc;
+        uint16_t crc16calc=0;
+	uint8_t cmd[] = {0x51,0x00,0x00,0x00,0x00,0xFF};     // Read cmd
+
+
+	// Calculate Byte Position from blocknr 
+	blocknr = blocknr << 9; 
+
+	cmd[1] = ((blocknr & 0xFF000000) >>24 );
+	cmd[2] = ((blocknr & 0x00FF0000) >>16 );
+	cmd[3] = ((blocknr & 0x0000FF00) >>8 );
+
+	if((tmp = mmc_write_command (cmd)) != 0)
+	{
+		return tmp;
+	}
+
+        // Wait for start transfer	
+	while (spi_send(0xff) != 0xfe);
+
+	// Read data
+	for (uint16_t a=0;a<512;a++)
+	{
+		Buffer[a] = spi_send(0xff);
+		crc16calc=_crc_xmodem_update(crc16calc,Buffer[a]);
+	}
+	// read CRC word
+	crc=spi_send(0xff)<<8;
+	crc|=spi_send(0xff);
+
+#ifdef DEBUGMMC
+	uart_puts_P("UMA: mmc crc: ");
+	uart_puthexbyte(crc>>8);
+	uart_puthexbyte(crc&0xff);
+	uart_puts_P(" calc crc: ");
+	uart_puthexbyte(crc16calc>>8);
+	uart_puthexbyte(crc16calc&0xff);
+#endif
+	//set MMC_Chip_Select to high
+	MMC_Disable();
+        if(crc == crc16calc)
+	{
+#ifdef DEBUGMMC
+	        uart_puts_P(" ok\r\n");
+#endif
+		return 0;
+	}
+	else
+	{
+#ifdef DEBUGMMC
+	        uart_puts_P(" failed\r\n");
+#endif
+		return 1;
+	}
+}
+
+/*-----------------------------------------------------------------------*/
+/* Wait for card ready                                                   */
+/*-----------------------------------------------------------------------*/
+
+uint8_t mmc_wait_ready (void)
+{
+	uint8_t res;
+        uint8_t retry=50;
+
+	spi_send(0xff);
+	do
+		res = spi_send(0xff);
+	while ((res != 0xFF) && retry--);
+
+	return res;
+}
+
+
+
+void mmc_dump_buffer(uint8_t *buffer,uint16_t len)
+{
+#ifdef DEBUGMMC
+	uint8_t asci[16];
+	uint8_t index=0;
+
+	for (uint16_t i = 0; i < len; i++)
+	{
+		uart_putc(' ');
+		uart_puthexbyte(buffer[i]);
+		if(buffer[i]>=32 && buffer[i]<127)
+		{
+			asci[index]=buffer[i];
+		}
+		else
+		{
+			asci[index]='.';
+		}
+		index++;
+		if(!((i+1)%16))
+		{
+			for(uint8_t x=0;x<index;x++) uart_putc(asci[x]);
+			index=0;
+			uart_eol();
+		}
+	}
+	uart_eol();
+#endif
+}
