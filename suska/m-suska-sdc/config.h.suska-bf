@@ -1,0 +1,192 @@
+// SDC-Controller Suska-III-BF
+//#include "avr-names.h"
+#define BOARDTYPE "Suska-III-BF"
+
+//#define SWVERSION 0x20200608
+//
+#define INFOFLASHEND 
+#define INFOBOOTLDRSIZE 0x800
+
+// BootFlash
+#define BOOT_REQ_PIN  PINC
+#define BOOT_REQ      PC7
+#define BOOT_ACK_DDR  DDRC
+#define BOOT_ACK_PORT PORTC
+#define BOOT_ACK      PC6
+
+// Configure ticker
+//#define _USE_DELAY_
+//#define SIGNALTICK
+//#define _USE_TIMER1_
+
+// Configure mmc (SD-Card)
+#define _MMC_Write_        PORTB
+#define _MMC_DDR_          DDRB
+#define _MMC_Chip_Select_  PB4
+#define _MMC_CTRL_PORT_    PORTB
+#define _MMC_CTRL_DDR_     DDRB
+#define _MMC_ACTIVATE_     PB5
+//#define DEBUGMMC
+
+// Configure SPI (zur SD-Card)
+#define SUSKAFLASH
+#define USE_SoftSPI
+#define SoftSPI_DDR    DDRB
+#define SoftSPI_PORT   PORTB
+#define SoftSPI_MOSI   PB2  
+#define SoftSPI_SCK    PB1   
+#define SoftSPI_PIN    PINB
+#define SoftSPI_MISO   PB3   
+#define SD_IMAGEFILE
+// Configure Suska SPI (Fboot, etc.)
+#define USE_SUSKASPI
+#define USE_SSS
+#define SuskaSPI_DDR    DDRC
+#define SuskaSPI_PORT   PORTC
+#define SuskaSPI_MOSI   PC4 
+#define SuskaSPI_SCK    PC5 
+#define SuskaSPI_PIN    PINC
+#define SuskaSPI_MISO   PC3 
+
+#define SuskaSSSPI_DDR    DDRE
+#define SuskaSSSPI_PORT   PORTE
+#define SuskaSPI_SS2    PE7
+#define SuskaSPI_SS1    PE6
+#define SuskaSPI_SS0    PE5
+//#define DEBUG
+
+// Configure tff
+#define MINIMIZE_LEVEL 1
+#define FAT32 1
+#define USE_STRFUNC 0
+#define USE_LFN 1
+#define _FF_
+//#define get_fattime RTC_get_fattime
+
+// Configure ASISP
+#define AS_IDLETIMEOUT (1000)
+#define AS_DDR         DDRA
+#define AS_PORT        PORTA
+#define AS_PIN         PINA
+#define AS_FPGACE      (_BV(PA0))
+#define AS_CONFDONE    (_BV(PA1))
+#define AS_DCLK        (_BV(PA2))
+#define AS_DO          (_BV(PA3))
+#define AS_DATA        (_BV(PA4))
+#define AS_CSO         (_BV(PA5))
+#define AS_CONFIG      (_BV(PA6))
+
+// Configure UART
+#define UART_BAUDRATE   38400
+#define UART_BUFSIZE_IN 50
+#define _UART_IRQ_NOWAIT_EMPTY_
+#define _UART_IRQ_EOL_D_OR_A_
+#define _UART_IRQ_NOTIMEOUT_
+#define _UART_IRQ_ONLY_RETURN_
+#define USE_PRINTF
+
+// Shell
+#define __HAVE_FILESYSTEM__
+#define DEBUGTRACELEVEL 0x00000001L
+#define SHELL_HAVE_LED   
+#define SHELL_LEDDDR      DDRG
+#define SHELL_LEDPORT     PORTG
+#define SHELL_LED         (_BV(PG0))
+#define SHELL_POLL shell_poll
+#define _SHELL_TITLE_ "*** Suska-III-BF FPGA-Shell ***\r\n"
+#define OSD
+
+// Power
+#define EN_PS_DDR DDRF
+#define EN_PS_PORT PORTF
+#define EN_PS PF3
+#define RESET_CORE_DDR DDRF
+#define RESET_CORE_PORT PORTF
+#define RESET_CORE PF1
+#define RESET_DDR DDRF
+#define RESET_PORT PORTF
+#define RESET PF2
+#define FPGA_CONFIG_DONE_PIN PINA
+#define FPGA_CONFIG_DONE PA1
+
+#define RESET_BUTTON_PINS PIND
+#define POWER_RESET_BUTTON PD6
+#define CORE_RESET_BUTTON PD5
+
+// Softuart
+#define SUART_TXD
+#define SUART_RXD
+#define _SUART_USE_FIFO_
+#define _SUART_TX_PORT_ PORTD
+#define _SUART_RX_PORT_ PORTD
+#define _SUART_TX_DDR_ DDRD
+#define _SUART_RX_DDR_ DDRD
+#if 1 //1=new 0=old
+#define _SUART_TX_PIN_ PD1
+#define _SUART_RX_PIN_ PD0
+#else
+#define _SUART_TX_PIN_ PD0
+#define _SUART_RX_PIN_ PD1
+#endif
+#define _SUART_RX_PINREG_ PIND
+#define _SUART_BAUDRATE_ 7812.5
+
+// Joystick
+//#define _PULL_UP_
+#define JOYUPPORT  PORTC
+#define JOYUPPIN   PINC
+#define JOYUPDDR   DDRC
+#define JOYUP      PC1
+#define JOYDOWNPORT  PORTC
+#define JOYDOWNPIN   PINC
+#define JOYDOWNDDR   DDRC
+#define JOYDOWN      PC2
+#define JOYLEFTPORT  PORTD
+#define JOYLEFTPIN   PIND
+#define JOYLEFTDDR   DDRD
+#define JOYLEFT      PD2
+#define JOYRIGHTPORT  PORTD
+#define JOYRIGHTPIN   PIND
+#define JOYRIGHTDDR   DDRD
+#define JOYRIGHT      PD3
+#define JOYBUTTONPORT  PORTD
+#define JOYBUTTONPIN   PIND
+#define JOYBUTTONDDR   DDRD
+#define JOYBUTTON      PD4
+// Send Joystickdata via SPI
+#define JOYSPI
+#define KEYSPI
+
+#define PS2_PCIE       PCIE1
+#define PS2_PCIF       PCIF1
+#define PS2_PCINT_vect PCINT1_vect
+#define PS2_PCMSK      PCMSK1
+
+#define KB_PCINT                PCINT14
+#define KB_CLOCK                PB7
+#define KB_CLOCK_PORT           PORTB
+#define KB_CLOCK_PIN            PINB
+#define KB_CLOCK_DDR            DDRB
+#define KB_DATA		        PD7
+#define KB_DATA_PORT		PORTD
+#define KB_DATA_PIN		PIND
+#define KB_DATA_DDR		DDRD
+
+#define MS_PCINT        PCINT15
+#define MS_CLOCK        PB6
+#define MS_CLOCK_PORT   PORTB
+#define MS_CLOCK_PIN    PINB
+#define MS_CLOCK_DDR    DDRB
+#define MS_DATA         PB0
+#define MS_DATA_PORT    PORTB
+#define MS_DATA_PIN     PINB
+#define MS_DATA_DDR     DDRB
+
+// Input Voltage Internal Reference 1.1V
+// Resolution 10bit (0..1023)
+// R1/R2 see Schematics
+#define R1 47000.0
+#define R2 10000.0
+#define FACTOR (1023/1.1)
+#define ADC_CHANNEL 0
+

@@ -1,0 +1,80 @@
+// Configure ticker
+//#define _USE_DELAY_
+#define SIGNALTICK
+//#define _USE_TIMER1_
+
+// Configure UART
+#define UART_BAUDRATE   38400
+//#define UART_BAUDRATE   9600
+#define UART_BUFSIZE_IN 50
+#define _UART_IRQ_NOWAIT_EMPTY_
+#define _UART_IRQ_EOL_D_OR_A_
+#define _UART_IRQ_NOTIMEOUT_
+#define _UART_IRQ_ONLY_RETURN_
+#define USE_PRINTF
+#define USE_UART0
+//#define USE_UART1
+#define _USE_IRQ_
+
+// Configure SPI
+//#define USE_SoftSPI
+//#define SoftSPI_DDR DDRB
+//#define SoftSPI_SS PB2
+//#define SoftSPI_PORT PORTB
+//#define SoftSPI_PIN PINB
+//#define SoftSPI_MOSI PB3
+//#define SoftSPI_MISO PB4
+//#define SoftSPI_SCK PB5
+
+// Configure mmc
+//#define _MMC_Write_        PORTE
+//#define _MMC_DDR_          DDRE
+//#define _MMC_Chip_Select_  PB3
+// Configure tff
+//#define MINIMIZE_LEVEL 1
+//#define FAT32 1
+//#define USE_STRFUNC 0
+//#define USE_LFN 1
+//#define _FF_
+//#define get_fattime RTC_get_fattime
+
+
+// Shell
+//#define __HAVE_FILESYSTEM__
+#define DEBUGTRACELEVEL 0x00000001L
+//#define SHELL_HAVE_LED
+//#define SHELL_LEDDDR      DDRB
+//#define SHELL_LEDPORT     PORTB
+//#define SHELL_LED         (_BV(PB0))
+//#define SHELL_POLL shell_poll
+#define _SHELL_TITLE_ "*** AVR-Shell ***\r\n"
+//#define PUZZLE
+
+// Configure Max3421
+#define USBDEBUG
+#define USB_LOOP
+#define USE_SUSKASPI
+#define MAX_NOGPX
+#define MAX_RESET_DDR DDRD
+#define MAX_RESET_PORT PORTD
+#define MAX_RESET_BIT PD7
+#define Suska_INT_DDR   DDRB
+#define Suska_INT_PORT  PORTB
+#define Suska_INT_BIT   PB1
+// Configure Suska SPI
+#define NO_FBOOT
+#define SuskaSPI_DDR    DDRB
+#define SuskaSPI_PORT   PORTB
+#define SuskaSPI_PIN    PINB
+#define SuskaSPI_MOSI   PB3
+#define SuskaSPI_MISO   PB4
+#define SuskaSPI_SCK    PB5
+#define USE_SSS
+#define SuskaSSSPI_DDR    DDRB
+#define SuskaSSSPI_PORT   PORTB
+#define SuskaSPI_SS2    PB6
+#define SuskaSPI_SS1    PB2
+#define SuskaSPI_SS0    PB7
+
+
+

@@ -1,0 +1,10 @@
+Board     Version   Remarks	
+BF/B/C    20200216  SPI-Slave for Info, FBoot and SD-File (Multicomp SS=000)
+BF        20200225  new Support for Joystick SPI-Slave (SS=101)
+BF        20200301  new Support for PS2-Keyboard SPI Slave (SS=100)
+BF        20200304  Keyboard Mapping Help==WL" Undo=="WR"
+BF        20200325  SPI-Slave osd (SS=000)
+BF        20200401  Info extended to 16bit Type and 32bit Version
+BF        20200418  Info detects now old and new Format
+BF        20200513  Update to Support 2K20A Core on Suska-III-C
+BF/B/C    20211009  Remove f-start (not needed any more)

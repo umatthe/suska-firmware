@@ -1,0 +1,121 @@
+// SDC- Controller Suska-III-C
+// Draht  PD2 <-> GPO (X18) FPGA momentan nicht benutzt
+//#include "avr-names.h"
+#define BOARDTYPE "Suska-III-C"
+
+//#define SWVERSION 0x20200606
+//
+#define INFOFLASHEND 
+#define INFOBOOTLDRSIZE 0x800
+
+// BootFlash
+#define BOOT_AVREN_DDR  DDRD
+#define BOOT_AVREN_PORT PORTD
+//#define BOOT_AVREN_PIN PIND
+#define BOOT_SD_AVR_EN PD3
+#define BOOT_REQ_PIN  PINA
+#define BOOT_REQ      PA7
+#define BOOT_ACK_DDR  DDRC
+#define BOOT_ACK_PORT PORTC
+#define BOOT_ACK      PC0
+//#define BOOT_TRIGGER_DDR  DDRC
+//#define BOOT_TRIGGER_PORT PORTC
+//#define BOOT_TRIGGER      PC1
+
+// Configure ticker
+//#define _USE_DELAY_
+#define SIGNALTICK
+#define _USE_TIMER1_
+
+// Configure mmc
+#define _MMC_Write_        PORTB
+#define _MMC_DDR_          DDRB
+#define _MMC_Chip_Select_  PB7
+//#define DEBUGMMC
+
+// Configure SPI
+#define USE_SoftSPI
+#define SoftSPI_DDR    DDRB
+#define SoftSPI_PORT   PORTB
+#define SoftSPI_MOSI   PB3
+#define SoftSPI_SCK    PB2
+#define SoftSPI_PIN    PINB
+#define SoftSPI_MISO   PB4
+//#define SoftSPI_PIN    PIND
+//#define SoftSPI_MISO   PD2
+
+// Configure Max3421
+//#define USB_GATE
+// Configure Suska SPI
+#define SUSKAFLASH
+#define USE_SUSKASPI
+#define USE_SSS
+#define SuskaSPI_DDR    DDRD
+#define SuskaSPI_PORT   PORTD
+#define SuskaSPI_PIN    PIND
+#define SuskaSPI_MOSI   PD7
+#define SuskaSPI_MISO   PD6
+#define SuskaSPI_SCK    PD5
+#define SuskaSSSPI_DDR    DDRC
+#define SuskaSSSPI_PORT   PORTC
+#define SuskaSPI_SS2    PC5
+#define SuskaSPI_SS1    PC6
+#define SuskaSPI_SS0    PC7
+#define Suska_INT_DDR   DDRC
+#define Suska_INT_PORT  PORTC
+#define Suska_INT_BIT   PC0
+#define DEBUG
+
+// Configure tff
+#define MINIMIZE_LEVEL 1
+#define FAT32 1
+#define USE_STRFUNC 0
+#define USE_LFN 1
+#define _FF_
+//#define get_fattime RTC_get_fattime
+
+// Configure ASISP
+#define AS_IDLETIMEOUT (1000)
+#define AS_DDR         DDRA
+#define AS_PORT        PORTA
+#define AS_PIN         PINA
+#define AS_FPGACE      (_BV(PA0))
+#define AS_CONFDONE    (_BV(PA1))
+#define AS_DCLK        (_BV(PA2))
+#define AS_DO          (_BV(PA3))
+#define AS_DATA        (_BV(PA4))
+#define AS_CSO         (_BV(PA5))
+#define AS_CONFIG      (_BV(PA6))
+
+
+
+// Configure UART
+#define UART_BAUDRATE   38400
+#define UART_BUFSIZE_IN 50
+#define _UART_IRQ_NOWAIT_EMPTY_
+#define _UART_IRQ_EOL_D_OR_A_
+#define _UART_IRQ_NOTIMEOUT_
+#define _UART_IRQ_ONLY_RETURN_
+#define USE_PRINTF
+
+// Shell
+#define __HAVE_FILESYSTEM__
+#define DEBUGTRACELEVEL 0x00000001L
+#define SHELL_HAVE_LED   
+#define SHELL_LEDDDR      DDRB
+#define SHELL_LEDPORT     PORTB
+#define SHELL_LED         (_BV(PB0))
+#define _SHELL_TITLE_ "*** Suska-III-C FPGA-Shell ***\r\n"
+
+#define SD_IMAGEFILE
+
+// Power (FPGA-Resets)
+#define RESET_CORE_DDR DDRC
+#define RESET_CORE_PORT PORTC
+#define RESET_CORE PC1
+#define RESET_DDR DDRC
+#define RESET_PORT PORTC
+#define RESET PC2
+
+// Experimental Stuff
+#define SPIRAM
