@@ -8,3 +8,4 @@ BF        20200401  Info extended to 16bit Type and 32bit Version
 BF        20200418  Info detects now old and new Format
 BF        20200513  Update to Support 2K20A Core on Suska-III-C
 BF/B/C    20211009  Remove f-start (not needed any more)
+BF/B/C    20211025  mmc_init cleanup - reduce spi-clock while init

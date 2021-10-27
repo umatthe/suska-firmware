@@ -54,11 +54,18 @@ Just lists all available commands with short usage
 - f-write flashoffset number-of-16bit-words infile
   fills the flasharea with the content of the file on the SD-Card
 
-A typical workflow to fill the TOS-Flash:
+A typical workflow to fill the TOS-Flash (on Suska-III-B/BF):
 - create a Raw-TOS-file containing a concatination of up to 16 512k TOS files
 - copy this File to the SD-Card and insert this Card in the (lower) SD-slot
 - erase flash:       f-erase
 - write to flash:    f-write 0 tosfile.img
+
+A typical workflow to fill the TOS-Flash (on Suska-III-C):
+- copy all required TOS images to the SD-Card and insert this Card in the SD-slot
+- 1. erase flash:       f-erase
+- 2. select TOS-Slot with Switch SW1(2-4)
+- 3. write to flash:    f-write 0 tosfile.img
+- 4. repeat from 2. until all Tos images are flashed
 
 3.4 Common Commands
 -------------------

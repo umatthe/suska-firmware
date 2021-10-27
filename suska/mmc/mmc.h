@@ -19,21 +19,6 @@
 #warning "_MMC_Chip_Select_ not defined using Default PB0"
 #endif
 
-#ifdef _MMC_CTRL_
-#ifndef _MMC_CTRL_DDR_ 
-#error "_MMC_CTRL_ defined _MMC_CTRL_DDR_ needs to be defined too" 
-#endif
-#ifndef _MMC_ACTIVATE_ 
-#error "_MMC_CTRL_ defined _MMC_ACTIVATE_ needs to be defined too" 
-#endif
-#ifndef _MMC_CDI_ 
-#error "_MMC_CTRL_ defined _MMC_CDI_ needs to be defined too" 
-#endif
-#ifndef _MMC_WP_ 
-#error "_MMC_CTRL_ defined _MMC_WP_ needs to be defined too" 
-#endif
-#endif
-
 void mmc_hwinit(void);
 
 uint8_t mmc_init(void);
@@ -53,10 +38,7 @@ void mmc_dump_buffer(uint8_t * ,uint16_t);
 #define MMC_Disable() _MMC_Write_|=  _BV(_MMC_Chip_Select_)
 #define MMC_Enable()  _MMC_Write_&= ~_BV(_MMC_Chip_Select_)
 
-#ifdef _MMC_CTRL_
-#define MMC_On()   _MMC_CTRL_|=  _BV(_MMC_ACTIVATE_)
-#define MMC_Off()  _MMC_CTRL_&= ~_BV(_MMC_ACTIVATE_)
-#elif defined SUSKA_BF // _MMC_DDR_
+#ifdef SUSKA_BF 
 #define MMC_Off()   _MMC_CTRL_PORT_|=  _BV(_MMC_ACTIVATE_); // uart_puts_P("SD-OFF\n\r");
 #define MMC_On()  _MMC_CTRL_PORT_&= ~_BV(_MMC_ACTIVATE_);  //uart_puts_P("SD-ON\n\r");
 #else

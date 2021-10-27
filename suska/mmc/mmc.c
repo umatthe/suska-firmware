@@ -16,9 +16,9 @@
 
 #include "config.h"
 #include "../spi/spi.h"
+#include "../uart-irq/uart-irq.h"
 #ifdef DEBUGMMC
 extern uint32_t tracelevel;
-#include "../uart-irq/uart-irq.h"
 #include "../misc/itoa.h"
 #endif
 
@@ -49,6 +49,8 @@ extern uint32_t tracelevel;
 #define CMD58   (0x40+58)       /* READ_OCR */
 
 static uint8_t CardType;                  /* b0:MMC, b1:SDv1, b2:SDv2, b3:Block addressing */
+
+extern uint8_t slowspi;
 
 uint8_t mmc_get_CardType( void )
 {
@@ -134,13 +136,10 @@ void mmc_hwinit( void )
 	MMC_Disable();
 	MMC_Off();
 	MMC_INH_OFF();
-#ifdef _MMC_CTRL_
-         _MMC_CTRL_DDR_ |= _BV(_MMC_ACTIVATE_);
-#else
+
 #ifdef _MMC_CTRL_DDR_
 	 _MMC_CTRL_DDR_  |= _BV(_MMC_ACTIVATE_);
 //	 _MMC_CTRL_PORT_ &= ~_BV(_MMC_ACTIVATE_); // Suska-BF Low = PowerOn
-#endif
 #endif
         _MMC_DDR_ |= _BV(_MMC_Chip_Select_);
 }
@@ -156,6 +155,8 @@ uint8_t mmc_init( void )
 	MMC_INH_ON();
 #endif
         _delay_ms(100);
+
+        slowspi=1;
 
 	// Send 128 clk
 	for (uint8_t b = 0;b<0x0f;b++)
@@ -231,25 +232,26 @@ uint8_t mmc_init( void )
 	if (ty) 
 	{  
 		// Init succeeded:	
-#ifdef DEBUGMMC
-        if(tracelevel>2)
-        {
+        slowspi=0;
+//#ifdef DEBUGMMC
+//        if(tracelevel>2)
+//        {
 		uart_puts_P("CardType :");
 		uart_puthexbyte(ty);
 		uart_eol();
-        }
-#endif
+//        }
+//#endif
 		return(1);
 	}
 	else
 	{
-#ifdef DEBUGMMC
-        if(tracelevel>2)
-        {
+//#ifdef DEBUGMMC
+//        if(tracelevel>2)
+//        {
 		uart_puts_P("mmc_init Error");
 		uart_eol();
-        }
-#endif
+//        }
+//#endif
 		MMC_Off();
 		return(0);
 	}

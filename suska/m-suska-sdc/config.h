@@ -1,7 +1,7 @@
 // SDC-Controller Suska-III-C/BF/B
 #include "avr-names.h"
 
-#define SWVERSION 0x20211009
+#define SWVERSION 0x20211025
 
 #define _USE_IRQ_
 
