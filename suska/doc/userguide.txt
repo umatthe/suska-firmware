@@ -26,7 +26,8 @@ on the board.
 - Suska Board :-)
 - PC with UART-Usb-Adapter 
 - (mirco)SD-Card formated with FAT16/32
-- Any terminal application (Setting: 38400 Bd, 8 Bit, 1 Stopbit, no partity) 
+- Any terminal application 
+  (Setting: 38400 Bd, 8 Bit, 1 Stopbit, no partity, Local Echo) 
 
 3. fpga-shell Commands
 ----------------------
@@ -106,12 +107,22 @@ Example:
 - puzzle iterations
  Will execute a puzzle benchmark. While it is running (several minutes)
  the normal function of the BF-Board (PS2-Interface) will be frozzen.
-- sd cpm-image
+- sd cpm-image <type>
  This programm will start a fileserver that presents the File "cpm-image"
  to the fpga. A special Core (Multicomp) is needed to create a Z80 Computer
- being able to boot cp/m. This is a endless loop - a power cycle is needed
- to return to normal operation. While the fileserver is running there is no
- ps2 functionality available.
+ being able to boot cp/m. 
+ type may be one of the following options:
+ o : Start the server in blocking mode. 
+     This is a endless loop - a power cycle is needed
+     to return to normal operation. While the fileserver is running there 
+     is no ps2 functionality available.
+ i : Show some info
+ a : Start the server in non blocking mode.
+ A : Start the server in non blocking mode with some debug output.
+ d : Stop the server
+ In a/A Mode the Server is running parallel to the FPGA-Shell and other
+ functions of the firmware. Other features using the SD-Card should be
+ used with care.
 - r-write offset binfile
  currently writes the content of "binfile" to the internal RAM of a AVR-Core
  This is only implemented in a special AVR-Core. In future it may be used to

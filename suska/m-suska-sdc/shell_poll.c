@@ -1,3 +1,8 @@
+#include <avr/io.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdio.h>
+#include <avr/pgmspace.h>
 
 #include "config.h"
 #include "../suska-iii/joystick.h"
@@ -8,6 +13,14 @@
 extern uint8_t kb_available;
 extern uint8_t ms_available;
 #endif
+#include "../uart-irq/uart-irq.h"
+#include "../spi/spi.h"
+#ifdef USE_SUSKASPI
+#include "../suska-iii/suskaspi.h"
+#endif
+#include "../mmc/mmc.h"
+#include "../tff/ff.h"
+#include "../suska-iii/sdrawfile.h"
 
 uint8_t shell_poll(void)
 {
@@ -27,9 +40,8 @@ uint8_t shell_poll(void)
     command_poll();
 #endif
 #endif
-#if defined(SUSKA_C)
-#warn "Suska-c no polling"
+#if defined(SD_IMAGEFILE)
+    sdraw_poll();
 #endif
     return res;
 }
-

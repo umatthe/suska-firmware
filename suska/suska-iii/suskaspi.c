@@ -34,10 +34,14 @@ void Suskaspi_init(void)
 
 #ifdef SD_IMAGEFILE
 // Used for SD-Access (sd-command)
+uint8_t getsdreq_status(void)
+{
+ return (BOOT_REQ_PIN&_BV(BOOT_REQ));
+}
 uint8_t waitsdreq(void)
 {
 	uint8_t ret=1;
-        while(!(BOOT_REQ_PIN&_BV(BOOT_REQ)))
+        while(!getsdreq_status())
 	{
 		if(buttons_poll())
 		{

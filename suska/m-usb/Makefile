@@ -68,7 +68,7 @@ OBJECTS += ../fifo/fifo.o ../misc/itoa.o ../misc/atoi.o ../misc/ctoHex.o ../misc
 ifeq ($(SDCARD),YES)
 OBJECTS += ../spi/spi.o 
 #OBJECTS += ../spi/softspi.o 
-OBJECTS += ../mmc/mmc.o ../tff/diskio.o
+OBJECTS += ../mmc/mmc.o ../mmc/mmc-hw.o ../tff/diskio.o
 OBJECTS += ../tff/ff.o ../tff/getfattime.o
 #OBJECTS += ../tff/ccsbcs.o
 endif

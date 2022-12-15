@@ -106,7 +106,7 @@
 #define SHELL_LEDPORT     PORTB
 #define SHELL_LED         (_BV(PB0))
 #define _SHELL_TITLE_ "*** Suska-III-C FPGA-Shell ***\r\n"
-
+#define SHELL_POLL shell_poll
 #define SD_IMAGEFILE
 
 // Power (FPGA-Resets)

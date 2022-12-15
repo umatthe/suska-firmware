@@ -2,6 +2,8 @@
 #include "config.h"
 #include "spi.h"
 
+uint8_t slowspi=0; //Dummy not used for HW-SPI
+
 void spi_enable(void)
 {
 #if F_CPU==48000000UL

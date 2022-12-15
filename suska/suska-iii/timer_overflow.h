@@ -5,11 +5,18 @@
 #include <avr/io.h>
 
 
+#if defined (SUSKA_BF)
 #define t0_on_2ms()   { TCNT0 = 0; TCCR0A=0x04; }
 #define t0_on_32ms()  { TCNT0 = 0; TCCR0A=0x05; }
 #define t0_off()      { TCCR0A = 0; }
 #define t0_overflow() ( TCCR0A==0 )
 //#define t0_overflow() ( 1==0 )
+#else
+#define t0_on_2ms()   { TCNT0 = 0; TCCR0B=0x04; }
+#define t0_on_32ms()  { TCNT0 = 0; TCCR0B=0x05; }
+#define t0_off()      { TCCR0B = 0; }
+#define t0_overflow() ( TCCR0B==0 )
+#endif
 
 #if defined (SUSKA_BF)
 #define t2_on_2ms()   { TCNT2 = 0; TCCR2A=0x04; }

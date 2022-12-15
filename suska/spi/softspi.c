@@ -86,7 +86,6 @@ uint8_t noinline Softspi_send(uint8_t data)
 		   asm("nop");
 		   asm("nop");
 		   asm("nop");
-		   data<<=1;
 		   asm("nop");
 		   asm("nop");
 		   asm("nop");
@@ -140,9 +139,9 @@ uint8_t noinline Softspi_send(uint8_t data)
                 else
                 {
 		   SoftSPI_PORT|=_BV(SoftSPI_SCK);
-		   data<<=1;
 		   SoftSPI_PORT&=~_BV(SoftSPI_SCK);
                 }
+	        data<<=1;
 	}
 	return rdata;
 }

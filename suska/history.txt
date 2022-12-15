@@ -9,3 +9,8 @@ BF        20200418  Info detects now old and new Format
 BF        20200513  Update to Support 2K20A Core on Suska-III-C
 BF/B/C    20211009  Remove f-start (not needed any more)
 BF/B/C    20211025  mmc_init cleanup - reduce spi-clock while init
+BF/B/C    20211111  mmc_init - better sd card type probing
+BF/C      20220404  cpm Multicomp SD-Card server in background
+B         20220820  solves B-Board Bootproblem without PS2-Keyboard attached 
+BF        20221116  Joystick0 support with BF-Extensionboard (untested)
+BF        20221212  Joystick0 Firebutton moved to PF7 (BF Board needs modification)

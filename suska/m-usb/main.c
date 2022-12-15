@@ -21,6 +21,11 @@
 
 extern FILE mystdout;
 
+void shell_info(void)
+{
+             uart_puts_P("ATMEGA-Version: "); uart_puthexlong(SWVERSION); uart_eol();
+}
+
 int main(void)
 {
         stdout = &mystdout;

@@ -14,6 +14,10 @@
 #define BOOTAVR_DISABLE
 #endif
 
+#if defined SD_IMAGEFILE
+extern uint8_t sd_active;
+#endif
+
 #include "power.h"
 
 void power_resetpin_init(void)
@@ -154,6 +158,9 @@ void shell_res( uint8_t *level)
        uart_puts_P(".\n\r");
 #endif
  }
+#if defined SD_IMAGEFILE
+ if(!sd_active)
+#endif
  BOOTAVR_DISABLE;
  uart_puts_P("\r\n");
 }
@@ -184,6 +191,9 @@ void shell_cres( uint8_t *level)
        uart_puts_P(".\n\r");
 #endif
  }
+#if defined SD_IMAGEFILE
+ if(!sd_active)
+#endif
  BOOTAVR_DISABLE;
  uart_puts_P("\r\n");
 }

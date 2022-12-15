@@ -31,13 +31,14 @@ extern uint32_t tracelevel;
 #endif
 
 #include "mmc.h"
+#include "softspi.h"
 //#include "../timer/tick.h"
 
 #ifndef NOAVRLIB
 #include <util/delay.h>
 #include <util/crc16.h>
 #else
-#define __USE_BSD
+//#define __USE_BSD
 #include <unistd.h>
 #define _delay_ms(v) usleep(v*1000)
 
@@ -487,7 +488,7 @@ void mmc_dump_buffer(uint8_t *buffer,uint16_t len)
 	uint8_t asci[16];
 	uint8_t index=0;
 
-        if(tracelevel>4)
+        if(tracelevel>0)
         {
 	for (uint16_t i = 0; i < len; i++)
 	{

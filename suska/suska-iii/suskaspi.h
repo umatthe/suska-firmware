@@ -42,6 +42,7 @@ uint8_t Suskaspi_send(uint8_t data);
 uint16_t Suskaspi_send16(uint16_t data);
 uint32_t readFpgaVersion(uint16_t *type);
 #ifdef SD_IMAGEFILE
+uint8_t getsdreq_status(void);
 uint8_t waitsdreq(void);
 #endif
 #if defined SUSKAFLASH

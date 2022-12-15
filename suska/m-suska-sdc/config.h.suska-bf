@@ -153,6 +153,29 @@
 #define JOYBUTTONPIN   PIND
 #define JOYBUTTONDDR   DDRD
 #define JOYBUTTON      PD4
+// Joystick0 on Suska-BF BaseBoard
+#define JOY0
+#define JOY0UPPORT  PORTG
+#define JOY0UPPIN   PING
+#define JOY0UPDDR   DDRG
+#define JOY0UP      PG1
+#define JOY0DOWNPORT  PORTG
+#define JOY0DOWNPIN   PING
+#define JOY0DOWNDDR   DDRG
+#define JOY0DOWN      PG2
+#define JOY0LEFTPORT  PORTG
+#define JOY0LEFTPIN   PING
+#define JOY0LEFTDDR   DDRG
+#define JOY0LEFT      PG3
+#define JOY0RIGHTPORT  PORTG
+#define JOY0RIGHTPIN   PING
+#define JOY0RIGHTDDR   DDRG
+#define JOY0RIGHT      PG4
+#define JOY0BUTTONPORT  PORTF
+#define JOY0BUTTONPIN   PINF
+#define JOY0BUTTONDDR   DDRF
+#define JOY0BUTTON      PF7
+
 // Send Joystickdata via SPI
 #define JOYSPI
 #define KEYSPI

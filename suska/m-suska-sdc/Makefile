@@ -73,7 +73,7 @@ OBJECTS += ../adc/adc.o
 OBJECTS += ../suska-iii/power.o
 
 OBJECTS += ../spi/softspi.o 
-OBJECTS += ../mmc/mmc.o ../tff/diskio.o
+OBJECTS += ../mmc/mmc-hw.o ../mmc/mmc.o ../tff/diskio.o
 OBJECTS += ../tff/ff.o main.o  ../tff/getfattime.o
 OBJECTS += ../tff/ccsbcs.o
 OBJECTS += ../asisp/asisp.o ../asisp/asappl.o ../asisp/asshell.o
@@ -90,13 +90,14 @@ ifeq ($(BOARD),SUSKA_C)
 #	OBJECTS += ../usb/hidhandler.o ../usb/usbloop.o
 #	OBJECTS += ../devices/spi/max3421e/max3421e.o
 #	OBJECTS += ../devices/spi/max3421e/max3421e_usb.o
+	OBJECTS += shell_poll.o ../suska-iii/sdrawfile.o
 endif
 ifeq ($(BOARD),SUSKA_BF)
 	OBJECTS += ../suska-iii/ps2int.o
 	OBJECTS += ../suska-iii/keyboard.o
 	OBJECTS += ../suska-iii/mouse.o
 	OBJECTS += ../suska-iii/buttons.o
-	OBJECTS += shell_poll.o
+	OBJECTS += shell_poll.o ../suska-iii/sdrawfile.o
 	OBJECTS += ../softuart/softuart.o
 	OBJECTS += ../suska-iii/timer_overflow.o
 	OBJECTS += ../suska-iii/osd.o

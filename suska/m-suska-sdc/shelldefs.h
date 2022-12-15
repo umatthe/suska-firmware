@@ -113,7 +113,7 @@ const __flash struct befehle befehle[MAXCOMMAND] =
 // Image File z.B. Multcomp
 //
 #ifdef SD_IMAGEFILE
-	{1,             F("sd"),      shell_sd,        F("sd rawimagefile")},
+	{2,             F("sd"),      shell_sd,        F("sd rawimagefile type")},
 #endif
 #if defined SUSKA_B | defined SUSKA_BF
 	{0,             F("ps2"),  shell_ps2,     F("reset ps2")},

@@ -42,6 +42,9 @@
 #include "mouse.h"
 #include "keyboard.h"
 #endif
+#if defined(SD_IMAGEFILE)
+#include "../suska-iii/sdrawfile.h"
+#endif
 
 extern long boot_id;
 extern short boot_app_version;
@@ -52,6 +55,8 @@ extern uint8_t ms_available;
 
 extern FATFS fs;
 extern uint32_t tracelevel;
+extern uint8_t sd_active;
+extern uint8_t sd_verbose;
 
 uint32_t fpgaversion;
 uint16_t fpgatype;
@@ -103,6 +108,9 @@ void shell_info( void)
 
              BOOTAVR_ENABLE;
              fpgainfo();
+#if defined SD_IMAGEFILE
+             if(!sd_active)
+#endif
              BOOTAVR_DISABLE;
 #if defined SUSKA_B | defined SUSKA_BF
 	     uint16_t rawvoltage;
@@ -396,109 +404,63 @@ void shell_ferase( void )
 #endif
 
 #ifdef SD_IMAGEFILE
-#define f_size(fp)  ((fp)->fsize)
-void shell_sd(uint8_t *n)
+void shell_sd(uint8_t *n, uint8_t *t)
 {
-	uint32_t req;
-	uint8_t b;
-	uint16_t index;
-        uint32_t block;
-        uint8_t cmd;
-        FIL handle;
-        FRESULT fres;
-        uint16_t flen;
-        uint32_t fsize;
+        BOOTAVR_ENABLE;
 
-
-        f_mount(0, &fs);
-        fres = f_open(&handle, n, FA_READ|FA_WRITE);
-        if(fres!=FR_OK)
+        switch(t[0])
         {
-         printf("fopen %s failed (%d)\n",n,fres);
-        }
-        else
+        case 'o':
         {
-                fsize = f_size(&handle);
-                printf("F-Size: %ld\n",fsize);
-                BOOTAVR_ENABLE;
-		while(1)
-		{
-			uart_puts_P("wait ... ");
-			waitsdreq();
-			uart_puts_P("REQ\n\r");
+          sdraw_openfile(n,0);
 
-			SS_ENABLESD;
-			for(uint8_t i=0;i<4;i++)
-			{
-				b=Suskaspi_send(0xAA);
-				req=(req<<8)|b;
-			}
-			block=req&0x00ffffff;
-			cmd  =(req&0x7f000000)>>24;
-                        if(cmd==2) 
-                        { 
-                          uart_puts_P("\n\rexit Cmd\n\r");
-                          sendack(); 
-                          break; 
-                        }
-                        if((block<<9)>fsize)
-                        { 
-                          uart_puts_P("\n\rillegal req: ");
-                          uart_puthexlong(req);
-                          uart_eol();
-                          sendack(); 
-                          break; 
-                        } 
-			fres=f_lseek(&handle,block<<9);
-                        if(fres!=FR_OK)
-			{
-                          uart_puts_P("\n\rseek failed\n\r");
-                          break;
-			}
+	  while(1) // Blocking loop shell is blocked.
+	  {
+		uart_puts_P("wait ... ");
+		waitsdreq();
+		uart_puts_P("REQ\n\r");
 
-			if(cmd==0) //read
-			{
-				//	uart_puts_P("cpm-sdc-request: "); uart_puthexlong(req); uart_eol();
-				//	uart_puts_P("cmd: "); uart_puthexbyte(cmd); uart_eol();
-				uart_puts_P("r: "); uart_puthexlong(block); 
-				sendack();
-				//	uart_puts_P("\n\rSend ACK\n\r");
-        	
-				for(index=0;index<512;index++)
-				{
+                if(sdraw_handle_req()) break;
 
-					f_read(&handle, &b, sizeof(b), &flen);
-					waitsdreq();
-					Suskaspi_send(b);
-					sendack();
-				}
-				//	uart_puts_P("Send ACK ");uart_puthexword(index); uart_eol();
-
-			}
-			else //write
-			{
-				uart_puts_P("w: "); uart_puthexlong(block);
-				sendack();
-				for(index=0;index<512;index++)
-				{
-					waitsdreq();
-					b=Suskaspi_send(0xee);
-//					if(!(index%16)) {uart_eol(); uart_puthexword(index); uart_puts_P(" ");}
-//				        uart_puthexbyte(b); uart_puts_P(" ");
-					f_write(&handle, &b, sizeof(b), &flen);
-					sendack();
-				}
-				uart_eol();	
-				f_sync(&handle);
-			}
-			SS_DISABLE;
-			uart_puts_P(" done\n\r");
-
-		}
-		SS_DISABLE;
-                BOOTAVR_DISABLE;
-		f_close(&handle);
-	}
+	  }
+          sdraw_closefile();
+          BOOTAVR_DISABLE;
+         }
+         break;
+         case 'i':
+         {
+           uart_puts_P("SD Info\n");
+           printf("Status: %s\n",sd_active?"Active":"Inactive");
+           printf("Debug: %s\n",sd_verbose?"Active":"Inactive");
+         }
+         break;
+         case 'a':
+         {
+           sdraw_openfile(n,1);
+         }
+         break;
+         case 'A':
+         {
+           sdraw_openfile(n,2);
+         }
+         break;
+         case 'd':
+         {
+           sdraw_closefile();
+           BOOTAVR_DISABLE;
+           uart_puts_P("SD-File disabled\n");
+         }
+         break;
+         default:
+         {
+                printf("unknown Option: %s\n",t);
+                uart_puts_P("a - activate file\n");
+                uart_puts_P("d - deactivate file\n");
+                uart_puts_P("o - open file blocking\n");
+                uart_puts_P("i - info\n");
+         }
+         break;
+         }
 }
 #endif
 
