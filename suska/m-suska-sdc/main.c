@@ -40,6 +40,7 @@ static bootldrinfo_t current_bootldrinfo;
 long boot_id;
 short boot_app_version;
 
+//extern uint8_t prev_state;
 
 extern FILE mystdout;
 
@@ -184,6 +185,18 @@ int main(void)
                 SuskaSPI_DDR &= ~(_BV(SuskaSPI_MOSI) | _BV(SuskaSPI_SCK));
                 SS_ENABLESD;  // All SSx Pins 0 - disable Pullup
                 joystick_init();
+#ifdef JOYDEBUGLOOP
+                uint8_t debugtimeout=60;
+                while(debugtimeout)
+                {
+                  joystick_poll();
+                  uart_puts_P("Joystick1 Value: ");
+                  uart_puthexbyte(joystick_poll());
+                  uart_eol();
+                  _delay_ms(1000);
+                  debugtimeout--;
+                }
+#endif
                 // Trigger Reset
                 set_reset_pin(1); delayms(50); 
                 set_reset_pin(0); delayms(500); 

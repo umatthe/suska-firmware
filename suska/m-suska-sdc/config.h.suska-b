@@ -1,8 +1,6 @@
 // SDC-Controller Suska-III-B
-//#include "avr-names.h"
 #define BOARDTYPE "Suska-III-B"
 
-//#define SWVERSION 0x20190731
 //
 #define INFOFLASHEND 
 #define INFOBOOTLDRSIZE 0x800
@@ -123,6 +121,7 @@
 #define CORE_RESET_BUTTON PD4
 
 // Joystick
+//#define JOYDEBUGLOOP
 #define JOYENABLEPORT  PORTB
 #define JOYENABLEDDR   DDRB
 #define JOYENABLE      PB3

@@ -103,7 +103,7 @@ static void joystick0_sendstate(void)
 #endif //JOY0
 
 static uint8_t prev_state = 0xff;
-void joystick_poll( void )
+uint8_t joystick_poll( void )
 {
  uint8_t state;
 #if defined JOY0
@@ -131,6 +131,7 @@ void joystick_poll( void )
 		joystick0_sendstate();
 	}
 #endif
+return prev_state; // UMA todo return value only used for debugging - joystick0 missing
 }
 
 void joystick_sendstate(void)

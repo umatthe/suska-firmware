@@ -6,7 +6,7 @@
 
 
 void joystick_init(void);
-void joystick_poll(void);
+uint8_t joystick_poll(void);
 void joystick_sendstate(void);
 #ifndef SUSKA_C
 void joystick_sendspi(uint8_t val);
