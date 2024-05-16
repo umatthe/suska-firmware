@@ -183,6 +183,7 @@ uint8_t mmc_init( void )
         _delay_ms(100);
 
         slowspi=1;
+        spi_enable_slow();
 
 	// Send 128 clk
 	for (uint8_t b = 0;b<0x0f;b++)
@@ -277,6 +278,7 @@ uint8_t mmc_init( void )
 	{  
 		// Init succeeded:	
         slowspi=0;
+        spi_enable();
 //#ifdef DEBUGMMC
 //        if(tracelevel>2)
 //        {

@@ -20,7 +20,7 @@
 #include "tick.h"
 
 volatile uint32_t tick=0;
-#if defined(__AVR_ATmega8__)
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega16__)
 static uint8_t counterPreset;
 #endif
 static uint32_t resolution;
@@ -59,7 +59,7 @@ void tick_init( tick_t speed )
 // ########################################
 // ### ATMEGAxx section
 // ########################################
-#if !defined(__AVR_ATmega8__)
+#if !defined(__AVR_ATmega8__) && !defined(__AVR_ATmega16__)
     TCCRxA = TCCRAval;
 #if !defined(__AVR_ATmega649A__)
     TCCRxB = TCCRBval;
@@ -191,7 +191,7 @@ void noinline sleepms(uint32_t ms)
 
 ISR(TIMERx_COMPA_vect)
 {
-#ifdef __AVR_ATmega8__
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega16__)
     TCNT0 = counterPreset;
 #endif
  tick++;

@@ -1,7 +1,7 @@
 // SDC-Controller Suska-III-C/BF/B
 #include "avr-names.h"
 
-#define SWVERSION 0x20221212
+#define SWVERSION 0x20240403
 
 #define _USE_IRQ_
 #define USEUARTDEBUG
@@ -10,6 +10,8 @@
 #include "config.h.suska-bf"
 #elif defined( SUSKA_C )
 #include "config.h.suska-c"
+#elif defined( SUSKA_C_SYSCTRL )
+#include "config.h.suska-c-sysctrl"
 #elif defined( SUSKA_B )
 #include "config.h.suska-b"
 #else

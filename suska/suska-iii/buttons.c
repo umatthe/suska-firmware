@@ -27,7 +27,11 @@ uint8_t buttons_poll( void )
  static uint8_t secondreset=0;
  if(!rb)
  {
+#ifdef RESET_BUTTON_PINS
    if((RESET_BUTTON_PINS & _BV(POWER_RESET_BUTTON)) != 0)
+#else
+   if((POWER_RESET_BUTTON_PIN & _BV(POWER_RESET_BUTTON)) != 0)
+#endif
    {
 	   if(!rstatus)
 	   {	
@@ -67,7 +71,11 @@ uint8_t buttons_poll( void )
 	 if(po>100000) 
 	 {
 		 switch_power(0);  // FPGA Power off
+#ifdef RESET_BUTTON_PINS
 		 while((RESET_BUTTON_PINS & _BV(POWER_RESET_BUTTON)) != 0); // Wait for Button release
+#else
+		 while((POWER_RESET_BUTTON_PIN & _BV(POWER_RESET_BUTTON)) != 0); // Wait for Button release
+#endif
 		 shell_reset(); // --> Restart AVR
 		 // never reached
 	 }
@@ -75,7 +83,11 @@ uint8_t buttons_poll( void )
 
  if(!cb)
  {
+#ifdef RESET_BUTTON_PINS
 	 if((RESET_BUTTON_PINS & _BV(CORE_RESET_BUTTON)) != 0)
+#else
+	 if((CORE_RESET_BUTTON_PIN & _BV(CORE_RESET_BUTTON)) != 0)
+#endif
 	 {
 		 if(!cstatus)
 		 {	

@@ -16,6 +16,16 @@ void Softspi_init(void)
 #endif
 }
 
+void Softspi_z(void)
+{
+    /* configure MOSI, SCK lines as inputs */
+#ifndef SoftSPI_SS
+    SoftSPI_DDR &= ~(_BV(SoftSPI_MOSI) | _BV(SoftSPI_SCK));
+#else
+    SoftSPI_DDR &= ~(_BV(SoftSPI_MOSI) | _BV(SoftSPI_SCK) | _BV(SoftSPI_SS));
+#endif
+}
+
 
 uint8_t noinline Softspi_send(uint8_t data)
 {	

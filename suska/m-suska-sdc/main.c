@@ -40,8 +40,6 @@ static bootldrinfo_t current_bootldrinfo;
 long boot_id;
 short boot_app_version;
 
-//extern uint8_t prev_state;
-
 extern FILE mystdout;
 
 #ifdef SUSKA_B
@@ -79,8 +77,10 @@ int main(void)
 #ifdef USE_SUSKASPI
         Suskaspi_init();
 #endif
+#ifndef SUSKA_C_SYSCTRL
         BOOT_ACK_PORT&=~_BV(BOOT_ACK);
         BOOT_ACK_DDR|=_BV(BOOT_ACK);
+#endif
 
 	uart_init(UART_UBRR);
 	uart_irqinit();
@@ -92,14 +92,21 @@ int main(void)
         power_resetpin_init();
         uart_puts_P("** Button Init done **\r\n");
 #endif
+
+#ifndef SUSKA_C_SYSCTRL
         memcpy_P(&current_bootldrinfo, (uint8_t*) FLASHEND - INFOBOOTLDRSIZE - sizeof(bootldrinfo_t) + 1, sizeof(bootldrinfo_t));
         boot_id=current_bootldrinfo.dev_id;
         boot_app_version=current_bootldrinfo.app_version;
+#endif
 #ifdef EN_PS // CTL has Power Switch
 
 // Wait for Power Button pressed
         int key;
+#ifdef RESET_BUTTON_PINS
 	while ((RESET_BUTTON_PINS & _BV(POWER_RESET_BUTTON)) == 0)
+#else
+	while ((POWER_RESET_BUTTON_PIN & _BV(POWER_RESET_BUTTON)) == 0)
+#endif
         {
            key=uart_getc_nowait();
            delayms(1000);
@@ -112,15 +119,18 @@ int main(void)
 #if defined SUSKA_B
 	adc_init(ADCREF_ARef);     //ADCREF_AREF == connected to VCC=3.3V on SUSKA_B
 #endif
+#ifndef SUSKA_C_SYSCTRL
 	adc_setChannel(ADC_CHANNEL);
 	adc_startConversion();
 	while(!adc_ConvReady());
-
+#endif
         uart_puts_P("** Power on done **\r\n");
 
+#ifndef SUSKA_C_SYSCTRL
         uart_puts_P("Raw Voltage: ");
         uart_puthexword( adc_GetValue());
 	uart_eol();
+#endif
         // Suska System Reset
         delayms(50);
         set_reset_core_pin(1);
@@ -155,8 +165,9 @@ int main(void)
 #if defined SUSKA_BF 
         joystick_init();
 #endif
+#if defined SUSKA_BF | defined SUSKA_B | defined SUSKA_C
 	as_init(false);
-
+#endif
 	while(1)
 	{
 		shell_init();

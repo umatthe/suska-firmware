@@ -15,9 +15,11 @@
 
 #include "config.h"
 
+#ifdef __HAVE_FILESYSTEM__
+#include "../mmc/mmc.h"
+#endif
 #include "../timer/tick.h"
 #include "../spi/spi.h"
-#include "../mmc/mmc.h"
 #include "../tff/ff.h"
 #include "../misc/itoa.h"
 #include "../uart-irq/uart-irq.h"
@@ -33,6 +35,9 @@
 
 #ifdef USE_SUSKASPI
 #include "suskaspi.h"
+#else
+#define BOOTAVR_ENABLE
+#define BOOTAVR_DISABLE
 #endif
 #ifdef USB_LOOP
 #include "../usb/usbloop.h"
@@ -145,8 +150,10 @@ void shell_info( void)
 #endif
 
              uart_puts_P("ATMEGA-Version: "); uart_puthexlong(SWVERSION); uart_eol();
+#ifndef SUSKA_C_SYSCTRL
              printf("Boot image id: %08lx\n",boot_id);
              printf("Boot App Version: %04x\n",boot_app_version);
+#endif
 
              uart_puts_P("FPGA-Coretype: "); 
              uart_puthexbyte(coretype); 

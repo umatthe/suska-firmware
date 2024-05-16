@@ -1,0 +1,55 @@
+// SYS-Controller Suska-III-C
+//#include "avr-names.h"
+#define BOARDTYPE "Suska-III-C-SYSCTRL"
+
+#define INFOFLASHEND 
+#define INFOBOOTLDRSIZE 0x800
+
+// Configure ticker
+#define _USE_DELAY_
+//#define SIGNALTICK
+//#define _USE_TIMER1_
+
+// Configure UART
+#define UART_BAUDRATE   38400
+#define UART_BUFSIZE_IN 50
+#define _UART_IRQ_NOWAIT_EMPTY_
+#define _UART_IRQ_EOL_D_OR_A_
+#define _UART_IRQ_NOTIMEOUT_
+#define _UART_IRQ_ONLY_RETURN_
+#define USE_PRINTF
+
+// Shell
+#define DEBUGTRACELEVEL 0x00000001L
+#define SHELL_HAVE_LED   
+#define SHELL_LEDDDR      DDRA
+#define SHELL_LEDPORT     PORTA
+#define SHELL_LED         (_BV(PA3))
+#define _SHELL_TITLE_ "*** Suska-III-C-SYSCTRL FPGA-Shell ***\r\n"
+#define SHELL_POLL shell_poll
+#define SHELL_PROMPT "C-SYS fpga-shell:> "
+
+// Power (FPGA-Resets)
+#define EN_PS
+#define EN_PS_DDR DDRD
+#define EN_PS_PORT PORTD
+#define EN_PS50 PD7
+#define EN_PS33 PD6
+#define EN_PS12 PD5
+#define EN_PSVB PD4
+#define RESET_CORE_DDR DDRC
+#define RESET_CORE_PORT PORTC
+#define RESET_CORE PC2
+#define RESET_DDR DDRC
+#define RESET_PORT PORTC
+#define RESET PC3
+#define RAMCKE_DDR DDRC
+#define RAMCKE_PORT PORTC
+#define RAMCKE PC5
+//#define FPGA_CONFIG_DONE_PIN PINB
+//#define FPGA_CONFIG_DONE PB0
+
+#define POWER_RESET_BUTTON_PIN PINB
+#define POWER_RESET_BUTTON PB2
+#define CORE_RESET_BUTTON_PIN PINA
+#define CORE_RESET_BUTTON PA5

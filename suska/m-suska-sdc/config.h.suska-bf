@@ -38,6 +38,9 @@
 #define SoftSPI_PIN    PINB
 #define SoftSPI_MISO   PB3   
 #define SD_IMAGEFILE
+#define SD_LOCK_DDR  DDRC
+#define SD_LOCK_PORT PORTC
+#define SD_LOCK PC0
 // Configure Suska SPI (Fboot, etc.)
 #define USE_SUSKASPI
 #define USE_SSS
@@ -94,6 +97,7 @@
 #define SHELL_LED         (_BV(PG0))
 #define SHELL_POLL shell_poll
 #define _SHELL_TITLE_ "*** Suska-III-BF FPGA-Shell ***\r\n"
+#define SHELL_PROMPT "BF fpga-shell:> "
 #define OSD
 
 // Power

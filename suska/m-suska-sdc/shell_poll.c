@@ -18,9 +18,11 @@ extern uint8_t ms_available;
 #ifdef USE_SUSKASPI
 #include "../suska-iii/suskaspi.h"
 #endif
+#ifdef __HAVE_FILESYSTEM__
 #include "../mmc/mmc.h"
 #include "../tff/ff.h"
 #include "../suska-iii/sdrawfile.h"
+#endif
 
 uint8_t shell_poll(void)
 {
@@ -39,6 +41,9 @@ uint8_t shell_poll(void)
 #if defined(SUSKA_BF)
     command_poll();
 #endif
+#endif
+#if defined(SUSKA_C_SYSCTRL)
+    res=buttons_poll();
 #endif
 #if defined(SD_IMAGEFILE)
     sdraw_poll();

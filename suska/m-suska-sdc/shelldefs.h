@@ -67,7 +67,9 @@ const __flash struct befehle befehle[MAXCOMMAND] =
 	{0,             F("reset"),    shell_reset,    F("reset avr")},
   #endif
 #endif
+#ifndef SUSKA_C_SYSCTRL
 	{0,             F("info"),     shell_info,     F("System Info")},
+#endif
 	{1,             F("trace"),    shell_trace,    F("enable Debug Traces")},
 	{1,             F("delay"),    shell_delay,    F("wait deltime ms")},
 #ifdef PUZZLE

@@ -198,15 +198,22 @@ void shell_cres( uint8_t *level)
  uart_puts_P("\r\n");
 }
 
-#if defined SUSKA_BF | defined SUSKA_B
+#if defined SUSKA_BF | defined SUSKA_B | defined SUSKA_C_SYSCTRL
 
 volatile uint8_t power_on = 0;
 
 void power_init(void)
 {
         power_resetpin_init();
+#ifndef SUSKA_C_SYSCTRL
         EN_PS_PORT&=~_BV(EN_PS);   // Set to 0 Power 0ff
         EN_PS_DDR|=_BV(EN_PS);     // Output
+#else
+        EN_PS_PORT&=~(_BV(EN_PS50)|_BV(EN_PS33)|_BV(EN_PS12)|_BV(EN_PSVB));
+        EN_PS_DDR|=_BV(EN_PS50)|_BV(EN_PS33)|_BV(EN_PS12)|_BV(EN_PSVB);
+        RAMCKE_PORT&=~_BV(RAMCKE);
+        RAMCKE_DDR|=_BV(RAMCKE);
+#endif
 #ifdef __HAVE_FILESYSTEM__
 	mmc_hwinit();
 #endif
@@ -223,23 +230,41 @@ uint8_t switch_power(uint8_t on)
 	if (power_on != on) 
 	{
 		if(on)
+                {
+#ifndef SUSKA_C_SYSCTRL
 			EN_PS_PORT|=_BV(EN_PS);   // Set to 1 Power On
+#else
+                        EN_PS_PORT|=_BV(EN_PS50)|_BV(EN_PS33)|_BV(EN_PS12)|_BV(EN_PSVB);
+                        RAMCKE_PORT|=(_BV(RAMCKE));
+#endif
+                }
 		else
+                {
+#ifndef SUSKA_C_SYSCTRL
 			EN_PS_PORT&=~_BV(EN_PS);
+#else
+                        EN_PS_PORT&=~(_BV(EN_PS50)|_BV(EN_PS33)|_BV(EN_PS12)|_BV(EN_PSVB));
+                        RAMCKE_PORT&=~(_BV(RAMCKE));
+#endif
+                }
 		
 		delayms(100);
-
+#ifndef SUSKA_C_SYSCTRL
 		while ((!(FPGA_CONFIG_DONE_PIN&_BV(FPGA_CONFIG_DONE))) && on && waitloop)
+#else
+		while ( on && waitloop)
+#endif
 		{
 			delayms(300);
 			uart_puts_P("wait conf ...\r\n");
 			waitloop--;
 		}
+#ifndef SUSKA_C_SYSCTRL
 		if(!waitloop)
 		{
 			uart_puts_P("timeout ... FPGA load failed\r\n");
 		}
-
+#endif
 		if (on) {
 			result = 1;
 		}

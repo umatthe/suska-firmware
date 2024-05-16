@@ -17,10 +17,13 @@ endif
 
 ifeq ($(BOARD),AVRCORE)
         MCU = atmega644p
-#        MCU = atmega32U4
 #	F_CPU = 14745600UL
-#       F_CPU = 16000000UL
-	F_CPU = 48000000UL
+#	F_CPU = 16000000UL
+       F_CPU = 32000000UL
+#	F_CPU = 48000000UL
+#	F_CPU = 56000000UL
+#	F_CPU = 60000000UL
+#	F_CPU = 64000000UL
 endif
 
 ifeq ($(BOARD),ARDUINO)

@@ -12,7 +12,7 @@
 #endif
 
 /* cpu specific configuration registers */
-#if defined(__AVR_ATmega32__) || defined(__AVR_ATmega8__) || defined(__AVR_ATmega103__)
+#if defined(__AVR_ATmega32__) || defined(__AVR_ATmega8__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega103__)
 #define _ATMEGA32
 
 #define _TIMSK_TIMER1 TIMSK1
@@ -27,8 +27,10 @@
 #define _UCSRC_UART0 UCSRC
 #define _UCSZ0_UART0 UCSZ00
 #define _UCSZ1_UART0 UCSZ01
-#define _SIG_UART_RECV_UART0 SIG_USART_RECV
-#define _SIG_UART_DATA_UART0 SIG_USART_DATA
+//#define _SIG_UART_RECV_UART0 SIG_USART_RECV
+//#define _SIG_UART_DATA_UART0 SIG_USART_DATA
+#define _SIG_UART_RECV_UART0 USART_RXC_vect
+#define _SIG_UART_DATA_UART0 USART_UDRE_vect
 #define _UDR_UART0 UDR
 #define _UDRE_UART0 UDRE
 #define _RXC_UART0 RXC
@@ -164,5 +166,7 @@
 #define TWDR TWDR0
 #define TWSR TWSR0
 #endif
-
+#ifndef _TXC_UART0
+#define _TXC_UART0 TXC
+#endif
 #endif /* _AVR_NAMES_H */

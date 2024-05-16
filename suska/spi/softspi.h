@@ -17,6 +17,7 @@ void SoftSpiReadChunk(uint8_t* pChunk, uint16_t nBytes);
 #define Softspi_wait_busy() 
 
 void Softspi_init(void);
+void Softspi_z(void);
 uint8_t noinline Softspi_send(uint8_t data);
 // Aliases 
 #define SoftSpiWriteByte(x) spi_send(x)

@@ -99,6 +99,7 @@
 //#define SHELL_LED         (_BV(PB0))
 #define SHELL_POLL shell_poll
 #define _SHELL_TITLE_ "*** Suska-III-B FPGA-Shell ***\r\n"
+#define SHELL_PROMPT "B fpga-shell:> "
 //#define SD_IMAGEFILE
 
 // Power

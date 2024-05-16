@@ -30,7 +30,7 @@
 /////////////////////////////////////////////////
 
 
-#if ((F_CPU == 8000000) | (F_CPU == 10000000) | (F_CPU == 14745600) | (F_CPU == 16000000) | (F_CPU == 20000000) | (F_CPU == 48000000) )
+#if ((F_CPU == 8000000) | (F_CPU == 10000000) | (F_CPU == 14745600) | (F_CPU == 16000000) | (F_CPU == 20000000) |  (F_CPU == 32000000) | (F_CPU == 48000000) | (F_CPU == 56000000) | (F_CPU == 60000000) | (F_CPU == 64000000) )
 	//Prescale==256
 #	define T0_PRESCALE1MS _BV(CS02)
 #	define T1_PRESCALE1MS _BV(CS02)
@@ -89,11 +89,31 @@
 // ### 100ms and 1s only possible for 16 Bit Timer
 // ################################################
 #if !defined(__AVR_ATmega8__)
-#if   (F_CPU == 48000000)  // Prescale 256/1024
+#if   (F_CPU == 64000000)  // Prescale 256/1024
+#	define LIMIT1MS     246
+#	define LIMIT10MS    621
+#	define LIMIT100MS  6246
+#	define LIMIT1S    62496
+#elif   (F_CPU == 60000000)  // Prescale 256/1024
+#	define LIMIT1MS     231
+#	define LIMIT10MS    582
+#	define LIMIT100MS  5856
+#	define LIMIT1S    58590
+#elif   (F_CPU == 56000000)  // Prescale 256/1024
+#	define LIMIT1MS     216
+#	define LIMIT10MS    544
+#	define LIMIT100MS  5466
+#	define LIMIT1S    54684
+#elif   (F_CPU == 48000000)  // Prescale 256/1024
 #	define LIMIT1MS     185 
 #	define LIMIT10MS    466
 #	define LIMIT100MS  4685
 #	define LIMIT1S    46872
+#elif (F_CPU == 32000000)  // Prescale 256/1024
+#	define LIMIT1MS     122
+#	define LIMIT10MS    310
+#	define LIMIT100MS  3122
+#	define LIMIT1S    31248
 #elif (F_CPU == 20000000)  // Prescale 256/1024
 #	define LIMIT1MS      77
 #	define LIMIT10MS    194

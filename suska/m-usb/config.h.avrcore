@@ -4,8 +4,8 @@
 #define _USE_TIMER1_
 
 // Configure UART
-#define UART_BAUDRATE   115200
-//#define UART_BAUDRATE   38400
+//#define UART_BAUDRATE   115200
+#define UART_BAUDRATE   38400
 //#define UART_BAUDRATE   9600
 #define UART_BUFSIZE_IN 50
 #define _UART_IRQ_NOWAIT_EMPTY_

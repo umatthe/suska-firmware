@@ -1,7 +1,7 @@
 // SDC-Controller Suska-III-C/BF/B
 #include "avr-names.h"
 
-#define SWVERSION 0x20211111
+#define SWVERSION 0x20240325
 
 #if defined( AVRCORE )
 #include "config.h.avrcore"

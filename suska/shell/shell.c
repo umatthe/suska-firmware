@@ -19,6 +19,7 @@
 #ifdef __HAVE_FILESYSTEM__
 #include "../mmc/mmc.h"
 #include "../tff/ff.h"
+extern uint8_t sd_active;
 FATFS fs;            // Work area (file system object) for logical drive
 #endif
 #include "../misc/itoa.h"
@@ -31,8 +32,42 @@ FATFS fs;            // Work area (file system object) for logical drive
 #include "../suska-iii/power.h"
 #endif
 
+#if defined (SUSKA_BF)
+#define  SD_LOCK_INIT() SD_LOCK_DDR|=_BV(SD_LOCK)
+#define  SD_LOCK_ACTIVE() SD_LOCK_PORT|=_BV(SD_LOCK)
+#define  SD_LOCK_INACTIVE() SD_LOCK_PORT&=~_BV(SD_LOCK)
+
+static void shell_sdc_disable(void)
+{
+  if(!sd_active)
+  {
+    Softspi_z();
+    _MMC_DDR_ &= ~_BV(_MMC_Chip_Select_);
+    SD_LOCK_INACTIVE();
+  }
+}
+
+static void shell_sdc_enable(void)
+{
+  Softspi_init();
+  _MMC_DDR_ |= _BV(_MMC_Chip_Select_);
+  SD_LOCK_ACTIVE();
+}
+
+#else
+#define  SD_LOCK_INIT()
+#define  SD_LOCK_ACTIVE()
+#define  SD_LOCK_INAVTIVE()
+#define shell_sdc_enable()
+#define shell_sdc_disable()
+#endif
+
+
+
 void shell_init(void)
 {
+        SD_LOCK_INIT();
+        SD_LOCK_ACTIVE();
 	led_init();
 //	led_on();
 
@@ -70,11 +105,11 @@ void shell_init(void)
 	_delay_ms(200);
 
 	uart_puts_P(_SHELL_TITLE_);
-	uart_puts_P("YH-fpga-shell:> ");
+	uart_puts_P(SHELL_PROMPT);
 #ifdef SHELL_INIT
         SHELL_INIT();
 #endif
-
+shell_sdc_disable();
 }
 
 void shell_loop(void)
@@ -102,6 +137,7 @@ void shell_loop(void)
 		}
 		if(llen>0)
 		{
+                        shell_sdc_enable();
 		        led_on();
 			// Cmd eingegeben....
 			if(parse_line(line)!=0)
@@ -112,8 +148,9 @@ void shell_loop(void)
 			}
 		}
 		// Cmd abgearbeitet....
-		uart_puts_P("fpga-shell:> ");
+		uart_puts_P(SHELL_PROMPT);
 		led_off();
+		shell_sdc_disable();
 
 	}
 }

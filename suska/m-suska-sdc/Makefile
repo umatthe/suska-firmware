@@ -1,5 +1,6 @@
 TARGET = main
 #BOARD = SUSKA_C
+#BOARD = SUSKA_C_SYSCTRL
 BOARD = SUSKA_BF
 #BOARD = SUSKA_B
 
@@ -9,6 +10,11 @@ OPTIONAL = PUZZLE
 ifeq ($(BOARD),SUSKA_C)
 	MCU = atmega644
 	F_CPU = 16000000UL
+endif
+
+ifeq ($(BOARD),SUSKA_C_SYSCTRL)
+	MCU = atmega16
+	F_CPU = 8000000UL
 endif
 
 ifeq ($(BOARD),SUSKA_B)
@@ -37,6 +43,9 @@ endif
 export CURDIR
 
 # flags for avrdude
+ifeq ($(MCU),atmega16)
+	AVRDUDE_MCU=m16
+endif
 ifeq ($(MCU),atmega8)
 	AVRDUDE_MCU=m8
 endif
@@ -58,6 +67,8 @@ endif
 
 ifeq ($(BOARD),SUSKA_BF)
 include $(CURDIR)/bootloader-bf.mk
+else ifeq ($(BOARD),SUSKA_C_SYSCTRL)
+include $(CURDIR)/bootloader-c-sysctrl.mk
 else
 include $(CURDIR)/bootloader.mk
 endif
@@ -72,17 +83,20 @@ OBJECTS += ../fifo/fifo.o ../misc/itoa.o ../misc/atoi.o ../misc/ctoHex.o ../misc
 OBJECTS += ../adc/adc.o
 OBJECTS += ../suska-iii/power.o
 
+OBJECTS += main.o
+ifneq ($(BOARD),SUSKA_C_SYSCTRL)
 OBJECTS += ../spi/softspi.o 
 OBJECTS += ../mmc/mmc-hw.o ../mmc/mmc.o ../tff/diskio.o
-OBJECTS += ../tff/ff.o main.o  ../tff/getfattime.o
+OBJECTS += ../tff/ff.o ../tff/getfattime.o
 OBJECTS += ../tff/ccsbcs.o
 OBJECTS += ../asisp/asisp.o ../asisp/asappl.o ../asisp/asshell.o
+OBJECTS += ../suska-iii/suskaspi.o
+endif
 OBJECTS += ../shell/parser.o ../shell/shell.o ../shell/commands.o
 ifeq ($(OPTIONAL),PUZZLE)
 OBJECTS += ../shell/puzzle.o
 endif
 OBJECTS += ../suska-iii/suskashell.o
-OBJECTS += ../suska-iii/suskaspi.o
 OBJECTS += ../coretype/coretypes.o
 
 ifeq ($(BOARD),SUSKA_C)
@@ -92,6 +106,12 @@ ifeq ($(BOARD),SUSKA_C)
 #	OBJECTS += ../devices/spi/max3421e/max3421e_usb.o
 	OBJECTS += shell_poll.o ../suska-iii/sdrawfile.o
 endif
+
+ifeq ($(BOARD),SUSKA_C_SYSCTRL)
+	OBJECTS += ../suska-iii/buttons.o
+	OBJECTS += shell_poll.o
+endif
+
 ifeq ($(BOARD),SUSKA_BF)
 	OBJECTS += ../suska-iii/ps2int.o
 	OBJECTS += ../suska-iii/keyboard.o
@@ -118,10 +138,10 @@ CFLAGS += -I.. -I$(CURDIR) -I. -D$(BOARD) -D$(OPTIONAL)
 # Additional libraries
 #
 ## Minimalistic printf version
-#LDFLAGS += -Wl,-u,vfprintf -lprintf_min
+LDFLAGS += -Wl,-u,vfprintf -lprintf_min
 #
 ## Floating point printf version (requires -lm below)
-LDFLAGS +=  -Wl,-u,vfprintf -lprintf_flt
+#LDFLAGS +=  -Wl,-u,vfprintf -lprintf_flt
 #
 ## -lm = math library
 LIBS = -lm 

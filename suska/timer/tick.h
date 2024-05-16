@@ -64,7 +64,7 @@
 #include <stdint.h>
 #include "config.h"
 
-#if !defined(__AVR_ATmega8__)
+#if !defined(__AVR_ATmega8__) && !defined(__AVR_ATmega16__)
 // Defines for "new" Atmegas
 #include "avrtick.h"
 #endif
@@ -93,7 +93,7 @@ extern volatile uint32_t tick;
 // Map Atmega8 Names to Atmega644/168/88/48 
 //
 //////////////////////////////////////////////
-#if defined(__AVR_ATmega8__)
+#if defined(__AVR_ATmega8__) ||  defined(__AVR_ATmega16__)
 
 #define _TIMERx_COMPA_vect_ TIMER0_OVF_vect
 #define _OCIExA_ TOV0
@@ -104,7 +104,7 @@ extern volatile uint32_t tick;
 // ########################################
 // ### ATMEGAxx section
 // ########################################
-#if !defined(__AVR_ATmega8__)
+#if !defined(__AVR_ATmega8__) && !defined(__AVR_ATmega16__)
 #if defined(_USE_TIMER1_)
 #	define PRESCALE1MS   T1_PRESCALE1MS
 #	define PRESCALE10MS  T1_PRESCALE10MS

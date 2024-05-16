@@ -47,7 +47,7 @@ extern "C" {
 #endif
 
 /* define uart mode (8N1) */
-#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega32__)
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__)
 /* in atmega8 and atmega32, we need a special switching bit
  * for addressing UCSRC */
 #define UART_UCSRC (_BV(URSEL) | _BV(UCSZ0) | _BV(UCSZ1))
@@ -108,29 +108,41 @@ extern "C" {
 #endif
 
 #if (UART_BAUDRATE == 115200 && F_CPU == 16000000)
-#   define UART_UBRR 8 /* 16Mhz, 115200 */
+#   define UART_UBRR 8
 #elif (UART_BAUDRATE == 38400 && F_CPU == 16000000)
-#   define UART_UBRR 25 /* 16Mhz, 38400 */
+#   define UART_UBRR 25
 #elif (UART_BAUDRATE == 4800 && F_CPU == 16000000)
-#   define UART_UBRR 207 /* 16Mhz, 4800 */
+#   define UART_UBRR 207
 #elif (UART_BAUDRATE == 9600 && F_CPU == 16000000)
-#   define UART_UBRR 103 /* 16Mhz, 9600 */
+#   define UART_UBRR 103
 #elif (UART_BAUDRATE == 115200 && F_CPU == 20000000)
-#   define UART_UBRR 10 /* 20Mhz, 115200 */
+#   define UART_UBRR 10
 #elif (UART_BAUDRATE == 4800 && F_CPU == 1000000)
-#   define UART_UBRR 12 /* 1Mhz, 4800 */
+#   define UART_UBRR 12
 #elif (UART_BAUDRATE == 4800 && F_CPU == 8000000)
-#   define UART_UBRR 103 /* Mmhz, 4800 */
+#   define UART_UBRR 103
 #elif (UART_BAUDRATE == 9600 && F_CPU == 8000000)
-#   define UART_UBRR 51 /* 8Mhz, 9600 */
+#   define UART_UBRR 51
 #elif (UART_BAUDRATE == 38400 && F_CPU == 8000000)
-#   define UART_UBRR 12 /* 8Mhz, 38400 */
+#   define UART_UBRR 12
 #elif (UART_BAUDRATE == 38400 && F_CPU == 14745600)
-#   define UART_UBRR 23 /* 14.7456Mhz, 38400 */
+#   define UART_UBRR 23
 #elif (UART_BAUDRATE == 38400 && F_CPU == 32000000)
-#   define UART_UBRR 50 /* 32Mhz, 38400 */
+#   define UART_UBRR 50
+#elif (UART_BAUDRATE == 115200 && F_CPU == 32000000)
+#   define UART_UBRR 16
 #elif (UART_BAUDRATE == 115200 && F_CPU == 48000000)
-#   define UART_UBRR 25 /* 16Mhz, 38400 */
+#   define UART_UBRR 25
+#elif (UART_BAUDRATE == 38400 && F_CPU == 48000000)
+#   define UART_UBRR 77
+#elif (UART_BAUDRATE == 115200 && F_CPU == 56000000)
+#   define UART_UBRR 29
+#elif (UART_BAUDRATE == 38400 && F_CPU == 60000000)
+#   define UART_UBRR 97
+#elif (UART_BAUDRATE == 115200 && F_CPU == 60000000)
+#   define UART_UBRR 32
+#elif (UART_BAUDRATE == 115200 && F_CPU == 64000000)
+#   define UART_UBRR 34
 #else
 #   define UART_UBRR (F_CPU/(UART_BAUDRATE * 16L)-1)
 #   warning "Default UART_UBRR Calculated"

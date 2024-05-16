@@ -4,16 +4,32 @@
 
 uint8_t slowspi=0; //Dummy not used for HW-SPI
 
-void spi_enable(void)
+void spi_enable_slow(void)
 {
-#if F_CPU==48000000UL
     /* enable spi, set master and clock modes (f/8) */
     _SPCR0 = _BV(_SPE0) | _BV(_MSTR0) | _BV(SPR1);
+    _SPSR0 = _BV(_SPI2X0);
+}
+
+void spi_enable(void)
+{
+#if (F_CPU==48000000UL) | (F_CPU==56000000UL) | (F_CPU==60000000UL) | (F_CPU==64000000UL)
+    /* enable spi, set master and clock modes (f/8) */
+//    _SPCR0 = _BV(_SPE0) | _BV(_MSTR0) | _BV(SPR1);
+//    _SPSR0 = _BV(_SPI2X0);
+
+    /* enable spi, set master and clock modes (f/4) */
+    _SPCR0 = _BV(_SPE0) | _BV(_MSTR0);
+    _SPSR0 = 0;
+
+    /* enable spi, set master and clock modes (f/2) */
+//    _SPCR0 = _BV(_SPE0) | _BV(_MSTR0);
+//    _SPSR0 = _BV(_SPI2X0);
 #else
     /* enable spi, set master and clock modes (f/2) */
     _SPCR0 = _BV(_SPE0) | _BV(_MSTR0);
+    _SPSR0 = _BV(_SPI2X0);
 #endif
-    _SPSR0 = _BV(_SPI2X0); 
 }
 
 void spi_init(void)
