@@ -213,6 +213,8 @@ void power_init(void)
         EN_PS_DDR|=_BV(EN_PS50)|_BV(EN_PS33)|_BV(EN_PS12)|_BV(EN_PSVB);
         RAMCKE_PORT&=~_BV(RAMCKE);
         RAMCKE_DDR|=_BV(RAMCKE);
+        UARTEN_PORT|=_BV(UARTEN);
+        UARTEN_DDR|=_BV(UARTEN);
 #endif
 #ifdef __HAVE_FILESYSTEM__
 	mmc_hwinit();
