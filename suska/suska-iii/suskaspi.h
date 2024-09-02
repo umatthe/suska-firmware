@@ -61,4 +61,8 @@ void Suskaspi_send_n(unsigned char value, unsigned short cnt);
 #define spi16(v) Suskaspi_send16(v)
 #define spi8(v) Suskaspi_send(v)
 #define spi_n(v,n) Suskaspi_send_n(v,n)
+
+#ifdef KEYSPI
+void keyboard_sendspi(uint8_t sendkey, uint8_t key);
+#endif
 #endif

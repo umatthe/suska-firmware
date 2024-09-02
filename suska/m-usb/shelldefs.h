@@ -25,6 +25,7 @@
 #include "../asisp/asshell.h"
 #include "../suska-iii/suskashell.h"
 #include "../suska-iii/power.h"
+#include "../suska-iii/atarikb.h"
 #ifdef PUZZLE
 void shell_puzzle(uint8_t *rounds);
 #endif
@@ -120,6 +121,7 @@ const __flash struct befehle befehle[MAXCOMMAND] =
 #ifdef OSD
 	{0,             F("osd"),  shell_osd,     F("shows info on osd")},
 #endif
+	{0,             F("kb"),  shell_kb,     F("Atari KB Test")},
 //
 // Ende Kennung (nicht loeschen)
 //

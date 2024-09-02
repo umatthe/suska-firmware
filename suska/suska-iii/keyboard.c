@@ -528,15 +528,3 @@ uint8_t is_keyboard_available(void)
         }
         return keyboard_ok;
 }
-
-#ifdef KEYSPI
-void keyboard_sendspi(uint8_t sendkey, uint8_t key)
-{
-        SS_ENABLEKEY;
-        Suskaspi_send(sendkey);
-        Suskaspi_send(key);
-        SS_DISABLE;
-//      _delay_ms(20);
-}
-#endif
-

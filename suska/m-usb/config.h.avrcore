@@ -48,8 +48,9 @@
 //#define SHELL_LEDDDR      DDRB
 //#define SHELL_LEDPORT     PORTB
 //#define SHELL_LED         (_BV(PB0))
-//#define SHELL_POLL shell_poll
+#define SHELL_POLL shell_poll
 #define _SHELL_TITLE_ "*** AVR-Shell ***\r\n"
+#define SHELL_PROMPT "softcore-shell:> "
 //#define PUZZLE
 
 // Configure Max3421
@@ -64,16 +65,17 @@
 #define Suska_INT_PORT  PORTB
 #define Suska_INT_BIT   PB7
 // Configure Suska SPI
+//#define SUSKASPI_SLOW
 #define SuskaSPI_DDR    DDRC
 #define SuskaSPI_PORT   PORTC
 #define SuskaSPI_PIN    PINC
-#define SuskaSPI_MOSI   PD0
-#define SuskaSPI_MISO   PD1
-#define SuskaSPI_SCK    PD2
+#define SuskaSPI_MOSI   PC0
+#define SuskaSPI_MISO   PC1
+#define SuskaSPI_SCK    PC2
 #define USE_SSS
 #define SuskaSSSPI_DDR    DDRC
 #define SuskaSSSPI_PORT   PORTC
-#define SuskaSPI_SS2    PD5
-#define SuskaSPI_SS1    PD6
-#define SuskaSPI_SS0    PD7
-
+#define SuskaSPI_SS2    PC5
+#define SuskaSPI_SS1    PC6
+#define SuskaSPI_SS0    PC7
+#define KEYSPI

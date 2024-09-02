@@ -30,7 +30,10 @@
 #include "osd.h"
 #endif
 
+#if defined SUSKA_B | defined SUSKA_BF
 #include "../adc/adc.h"
+#endif
+
 #include "../coretype/coretypes.h"
 
 #ifdef USE_SUSKASPI
@@ -129,7 +132,8 @@ void shell_info( void)
         uart_puthexword(rawvoltage);
         uart_eol();
 	voltage=((rawvoltage/FACTOR)*(R1+R2))/(R2);
-	sprintf(val,"%1.2fV\n\r",voltage);
+//UMA needs float support	sprintf(val,"%1.2fV\n\r",voltage);
+	sprintf(val,"%1d.%02dV\n\r",(int)voltage,(int)(voltage*100)-(int)voltage*100);
         uart_puts_P("Input Voltage: ");
         uart_puts(val);
 #elif defined SUSKA_C
@@ -150,7 +154,7 @@ void shell_info( void)
 #endif
 
              uart_puts_P("ATMEGA-Version: "); uart_puthexlong(SWVERSION); uart_eol();
-#ifndef SUSKA_C_SYSCTRL
+#if defined SUSKA_B | defined SUSKA_BF | SUSKA_C
              printf("Boot image id: %08lx\n",boot_id);
              printf("Boot App Version: %04x\n",boot_app_version);
 #endif
@@ -274,12 +278,19 @@ void shell_fdump( uint8_t *o, uint8_t *l)
 
         for(uint32_t i=0; i<len;i++)
         {
-                if(!(i%8)) printf("\n%08lx: ",(offset<<8)+i);
+                if(!(i%8))
+                {
+                       uart_eol();
+                       uart_puthexlong((offset<<8)+i);
+                       uart_puts_P(" : ");
+                }
+
                 data=sendfb(0xaffe);
-                printf("%04x ",data);
+                uart_puthexword(data);
+                uart_puts_P(" ");
         }
         SS_DISABLE;
-        printf("\n");
+        uart_eol();
 }
 void shell_fread( uint8_t *o, uint8_t *l, uint8_t *n)
 {
@@ -587,4 +598,10 @@ void shell_rwrite( uint8_t *o, uint8_t *n)
         }
 }
 
+#endif
+#ifdef avrcore
+void shell_kb(void)
+{
+    uart_puts_P("Atari-Keyboard\n");
+}
 #endif

@@ -48,6 +48,7 @@
 //#define SHELL_LED         (_BV(PB0))
 //#define SHELL_POLL shell_poll
 #define _SHELL_TITLE_ "*** AVR-Shell ***\r\n"
+#define SHELL_PROMPT "arduino-shell:> "
 //#define PUZZLE
 
 // Configure Max3421

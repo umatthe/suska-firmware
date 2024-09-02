@@ -39,6 +39,7 @@
 // Configure Suska SPI (FBoot)
 #define SUSKAFLASH
 #define USE_SUSKASPI
+#define SUSKASPI_ACKSLOW
 #define SuskaSPI_DDR    DDRB
 #define SuskaSPI_PORT   PORTB
 #define SuskaSPI_MOSI   PB5

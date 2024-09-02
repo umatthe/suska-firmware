@@ -97,7 +97,7 @@ static void joystick0_sendstate(void)
 #endif
 #ifdef JOYSPI
 //UMA todo Handling of Arcade Joystick0 missing
-//UMA if(coretype==CT_ARCADE)		joystick_sendspi(prev_state0);
+                if(coretype==CT_ARCADE)		joystick_sendspi(prev_state0);
 #endif
 }
 #endif //JOY0

@@ -80,7 +80,7 @@ void shell_init(void)
 #endif
 	uart_irqinit();
 
-#ifdef SHELL_LED
+#ifdef SHELL_HAVE_LED
 	// 3 mal Blinken zum Start
 	for(uint8_t i=0;i<3;i++)
 	{

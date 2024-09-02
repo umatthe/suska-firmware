@@ -83,20 +83,26 @@ void sendack(void)
 {
 
         // Generate ACK
+#ifdef SUSKASPI_ACKSLOW
         asm("nop");
         asm("nop");
         asm("nop");
         asm("nop");
+#endif
         BOOT_ACK_PORT|=_BV(BOOT_ACK);
+#ifdef SUSKASPI_ACKSLOW
         asm("nop");
         asm("nop");
         asm("nop");
         asm("nop");
+#endif
         BOOT_ACK_PORT&=~_BV(BOOT_ACK);
+#ifdef SUSKASPI_ACKSLOW
         asm("nop");
         asm("nop");
         asm("nop");
         asm("nop");
+#endif
 }
 
 uint16_t sendfb(uint16_t v)
@@ -196,7 +202,7 @@ void Suskaspi_send_n(unsigned char value, unsigned short cnt)
 }
 #endif
 
-#if defined SUSKA_C | defined SUSKA_B | defined SUSKA_BF
+#if defined SUSKA_C | defined SUSKA_B | defined SUSKA_BF | defined AVRCORE
 
 uint32_t readFpgaVersion(uint16_t *type)
 {
@@ -223,3 +229,14 @@ uint32_t readFpgaVersion(uint16_t *type)
         return ver;
 }
 #endif
+#ifdef KEYSPI
+void keyboard_sendspi(uint8_t sendkey, uint8_t key)
+{
+        SS_ENABLEKEY;
+        Suskaspi_send(sendkey);
+        Suskaspi_send(key);
+        SS_DISABLE;
+//      _delay_ms(20);
+}
+#endif
+

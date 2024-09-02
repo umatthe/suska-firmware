@@ -15,7 +15,7 @@ extern "C" {
 
 #include "config.h"
 
-#ifdef SHELL_HAVE_LED
+#if defined SHELL_HAVE_LED | defined SHELL_HAVE_UART_LED
 #ifdef SHELL_LED
 #define led_init() (SHELL_LEDDDR|=SHELL_LED)
 #ifdef SUSKA_BF

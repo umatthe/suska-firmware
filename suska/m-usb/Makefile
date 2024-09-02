@@ -18,8 +18,8 @@ endif
 ifeq ($(BOARD),AVRCORE)
         MCU = atmega644p
 #	F_CPU = 14745600UL
-#	F_CPU = 16000000UL
-       F_CPU = 32000000UL
+	F_CPU = 16000000UL
+#       F_CPU = 32000000UL
 #	F_CPU = 48000000UL
 #	F_CPU = 56000000UL
 #	F_CPU = 60000000UL
@@ -76,8 +76,10 @@ OBJECTS += ../tff/ff.o ../tff/getfattime.o
 #OBJECTS += ../tff/ccsbcs.o
 endif
 OBJECTS += ../shell/parser.o ../shell/shell.o ../shell/commands.o
-ifeq ($(OPTIONAL),USB)
 OBJECTS += ../suska-iii/suskaspi.o
+OBJECTS += ../suska-iii/suskashell.o
+OBJECTS += ../coretype/coretypes.o
+ifeq ($(OPTIONAL),USB)
 OBJECTS += ../usb/usb.o ../usb/hid.o ../usb/hidhandler.o ../usb/usbloop.o
 OBJECTS += ../devices/spi/max3421e/max3421e.o ../devices/spi/max3421e/max3421e_usb.o
 endif
@@ -85,6 +87,8 @@ ifeq ($(OPTIONAL),PUZZLE)
 OBJECTS += ../shell/puzzle.o
 endif
 
+OBJECTS += shell_poll.o
+OBJECTS += ../suska-iii/atarikb.o
 OBJECTS += main.o
 
 CFLAGS += -I.. -I$(CURDIR) -I. -D$(BOARD) -D$(OPTIONAL)

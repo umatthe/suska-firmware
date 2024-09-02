@@ -22,4 +22,3 @@ uint8_t keyboard_send_byte(uint8_t data);
 void keyboard_put(uint8_t c);
 uint8_t is_keyboard_available(void);
 void command_poll(void);
-void keyboard_sendspi(uint8_t sendkey, uint8_t key);

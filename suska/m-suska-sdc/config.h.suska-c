@@ -32,7 +32,8 @@
 #define _MMC_DDR_          DDRB
 #define _MMC_Chip_Select_  PB7
 //#define DEBUGMMC
-
+//#define USEUART
+//#define USEUARTDEBUG
 // Configure SPI
 #define USE_SoftSPI
 #define SoftSPI_DDR    DDRB
@@ -49,6 +50,7 @@
 // Configure Suska SPI
 #define SUSKAFLASH
 #define USE_SUSKASPI
+#define SUSKASPI_ACKSLOW
 #define USE_SSS
 #define SuskaSPI_DDR    DDRD
 #define SuskaSPI_PORT   PORTD

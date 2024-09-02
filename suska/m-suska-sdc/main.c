@@ -63,7 +63,7 @@ int main(void)
 #else
         tick_init(TICK100MS);
 #endif
-#ifdef SHELL_LED
+#ifdef SHELL_HAVE_LED 
         led_init();
         // 3 mal Blinken zum Start 
         for(uint8_t i=0;i<3;i++)
@@ -73,7 +73,17 @@ int main(void)
                 led_off();
                 _delay_ms(500);
         }
-#endif 
+#else 
+#ifdef SHELL_HAVE_UART_LED
+        led_init();
+        // Suska-BF-Pico Board uses this Pin to switch the SCC-RS232/Debug-UART 
+        // led_on()  == High == RS232
+        // led_off() == Low  == Uart
+        // todo: Add command to change setting from fpga-shell.
+        led_on();
+#endif
+#endif
+
 #ifdef USE_SUSKASPI
         Suskaspi_init();
 #endif

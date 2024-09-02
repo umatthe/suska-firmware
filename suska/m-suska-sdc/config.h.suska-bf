@@ -44,6 +44,7 @@
 // Configure Suska SPI (Fboot, etc.)
 #define USE_SUSKASPI
 #define USE_SSS
+#define SUSKASPI_ACKSLOW
 #define SuskaSPI_DDR    DDRC
 #define SuskaSPI_PORT   PORTC
 #define SuskaSPI_MOSI   PC4 
@@ -91,7 +92,7 @@
 // Shell
 #define __HAVE_FILESYSTEM__
 #define DEBUGTRACELEVEL 0x00000001L
-#define SHELL_HAVE_LED   
+#define SHELL_HAVE_UART_LED
 #define SHELL_LEDDDR      DDRG
 #define SHELL_LEDPORT     PORTG
 #define SHELL_LED         (_BV(PG0))
