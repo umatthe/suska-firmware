@@ -20,7 +20,9 @@
 //#include "../timer/tick.h"
 #include "../spi/spi.h"
 #include "../misc/itoa.h"
-
+#ifdef HAVE_EE_AS_ENABLE
+#include <avr/eeprom.h>
+#endif
 
 #define SILICONID    0xAB
 #define READ         0x03
@@ -31,6 +33,8 @@
 #define WRITE        0x02
 #define ERASEBULK    0xC7
 #define ERASESECTOR  0xD8
+#define POWERDOWN    0xB9
+#define MANID        0x9F
 
 #define IDLETIMEOUT AS_IDLETIMEOUT
 
@@ -53,6 +57,9 @@
 //#include AS_HAVE_LED
 //#endif
 
+#ifdef HAVE_EE_AS_ENABLE
+extern uint8_t ee_asactive EEMEM;
+#endif
 
 uint8_t as_confdone( void );
 uint8_t as_init( bool );

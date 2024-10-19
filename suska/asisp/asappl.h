@@ -18,7 +18,9 @@
 
 
 void printasstatus( void );
+uint8_t getasid( void );
 uint32_t getaslen( void );
+void powerdownas( uint8_t en );
 #ifdef __HAVE_FILESYSTEM__
 void flashassave(uint8_t *fname,uint32_t fsize, uint32_t ctaddr,uint8_t endian);
 void flashaswrite(uint8_t *fname, uint32_t ctaddr,uint8_t endian);

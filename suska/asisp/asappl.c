@@ -9,12 +9,26 @@
 
 #include "../shell/shell.h"
 #include "../shell/commands.h"
+
+#include "config.h"
+#include "../timer/tick.h"
 #include "asisp.h"
 #include "asappl.h"
 
 static uint32_t int_start;
 static uint32_t int_len;
 
+void powerdownas( uint8_t en )
+{
+        if(!en) //!=0
+        {
+	  uart_puts_P("AS-Disabled");
+          uart_eol();
+	  as_cso_lo();
+	  as_write(POWERDOWN);
+	  as_cso_hi();
+        }
+}
 
 void printasstatus( void )
 {
@@ -36,10 +50,10 @@ void printasstatus( void )
 	uart_eol();
 }
 
-uint32_t getaslen( void )
+
+uint8_t getasid( void )
 {
 	int8_t val;
-	uint32_t len;
 
 	as_init(true);
 	as_cso_lo();
@@ -49,7 +63,16 @@ uint32_t getaslen( void )
 	as_write(0);
 	val=as_read();
 	as_cso_hi();
-	switch(val)
+        delayms(1);
+        return val;
+}
+
+uint32_t getaslen( void )
+{
+	int8_t val;
+	uint32_t len;
+
+	switch(getasid())
 	{
 		case 0x10:
 			len=128L*1024L;

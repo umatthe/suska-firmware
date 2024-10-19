@@ -35,8 +35,11 @@ void shell_puzzle(uint8_t *rounds);
 //
 // Anzahl der implementierten Kommandos +2
 //
-#define MAXCOMMAND 25+2 
-
+#ifdef HAVE_EE_AS_ENABLE
+#define MAXCOMMAND 26+1+2 
+#else
+#define MAXCOMMAND 26+2 
+#endif
 #define MAXCMDLEN 8 
 #define MAXHELPLEN 30
 
@@ -95,6 +98,10 @@ const __flash struct befehle befehle[MAXCOMMAND] =
 	{1,             F("as-read"),  shell_asread,   F("read ConfigFlash")},
 	{1,             F("as-write"), shell_aswrite,  F("write .rbf file to ConfigFlash")},
 	{0,             F("as-getid"), shell_asgetid,  F("ConfigFlash Info")},
+	{0,             F("as-off"), shell_aspowerdown,  F("ConfigFlash powerdown")},
+#ifdef HAVE_EE_AS_ENABLE
+        {1,             F("as-en"), shell_asenable, F("1/0 en/disable as")},
+#endif
 #endif
 //
 // Ab hier USB Stuff
@@ -106,7 +113,7 @@ const __flash struct befehle befehle[MAXCOMMAND] =
 //
 // Ab hier Flash Stuff
 //
-	{0,             F("f-erase"), shell_ferase,    F("erase TOS-Flash")},
+	{1,             F("f-erase"), shell_ferase,    F("f-erase 512k-Slot/all")},
 	{3,             F("f-read"),  shell_fread,     F("f-read offset len tofile")},
 	{2,             F("f-write"), shell_fwrite,    F("f-write offset fromfile")},
 	{2,             F("f-dump"),  shell_fdump,     F("f-dump offset len")},

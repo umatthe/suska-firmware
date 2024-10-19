@@ -180,7 +180,7 @@ uint8_t mmc_init( void )
         MMC_On();
 	MMC_INH_ON();
 #endif
-        _delay_ms(100);
+        _delay_ms(1000);
 
         slowspi=1;
         spi_enable_slow();
@@ -237,7 +237,7 @@ uint8_t mmc_init( void )
 #ifdef DEBUGMMC
         if(tracelevel>2)
         {
-#ifdef USEUART
+#ifdef USEUARTDEBUG
                                         uart_puts_P("OCR :");
                                         uart_puthexbyte(ocr[0]); uart_puts_P(" ");
                                         uart_puthexbyte(ocr[1]); uart_puts_P(" ");
@@ -328,7 +328,7 @@ uint8_t mmc_wait_ready (void)
 #ifdef DEBUGMMC
         if(tracelevel>2)
         {
-#ifdef USEUART
+#ifdef USEUARTDEBUG
         uart_puts_P("Ready, retries remaining: ");
         uart_puts(itoa(retry));
         uart_eol();
@@ -493,7 +493,7 @@ void mmc_dump_buffer(uint8_t *buffer,uint16_t len)
         {
 	for (uint16_t i = 0; i < len; i++)
 	{
-#ifdef USEUART
+#ifdef USEUARTDEBUG
                 uart_putc(' ');
                 uart_puthexbyte(buffer[i]);
 #else

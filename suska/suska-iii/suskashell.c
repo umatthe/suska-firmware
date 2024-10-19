@@ -158,7 +158,7 @@ void shell_info( void)
              printf("Boot image id: %08lx\n",boot_id);
              printf("Boot App Version: %04x\n",boot_app_version);
 #endif
-
+#ifndef SUSKA_C_SYSCTRL
              uart_puts_P("FPGA-Coretype: "); 
              uart_puthexbyte(coretype); 
              uart_puts_P(" "); 
@@ -244,11 +244,11 @@ void shell_info( void)
              uart_puts_P(") "); uart_eol();
 
              uart_puts_P("FPGA-Version: "); uart_puthexlong(fpgaversion); uart_eol();
-
+#endif
 #ifdef USB_GATE
              uart_puts_P("MAX-Version: "); uart_puthexlong(mversion); uart_eol();
 	     
-#endif
+#endif // ifndef SUSKA_C_SYSCTRL
 }
 
 
@@ -273,7 +273,8 @@ void shell_fdump( uint8_t *o, uint8_t *l)
 
         waitbreq();
         printf("CMD: %x\n",sendfb(0x0017));
-        printf("-- %08lx %08lx\n",(offset<<8),len);
+//UMA        printf("-- %08lx %08lx\n",(offset<<8),len);
+        printf("-- %08lx %08lx\n",(offset),len);
         printf("FLASH Dump\n");
 
         for(uint32_t i=0; i<len;i++)
@@ -281,7 +282,7 @@ void shell_fdump( uint8_t *o, uint8_t *l)
                 if(!(i%8))
                 {
                        uart_eol();
-                       uart_puthexlong((offset<<8)+i);
+                       uart_puthexlong((offset<<9)+(i<<1)); //UMA 8
                        uart_puts_P(" : ");
                 }
 
@@ -400,24 +401,61 @@ void shell_fwrite( uint8_t *o, uint8_t *n)
         printf("\nFLASH Writen (%ld Words)\n",count);
         }
 }
-void shell_ferase( void )
+void shell_ferase( uint8_t *base )
 {
-
-
+        uint32_t start;
         BOOTAVR_ENABLE;
+        if(strncmp(base,"all",3) == 0)
+        {
+
+
         SS_ENABLEFLASHBOOT;
-
         power_fboot();
-
         waitbreq();
         sendfb(0x0000);
-
         waitbreq();
         sendfb(0x0010);
-
         printf("\nErase Flash while LED is blinking ...\n");
-
         SS_DISABLE;
+        }
+        else
+        {
+               sscanf(base,"%ld",&start);
+               printf("\nErase Flash 512K Slot: %d ",start);
+#ifdef SUSKA_C
+               if(start !=0)
+               {
+                 printf(" out of range (use 0, select Slot with dipswitches)\n");
+               }
+               
+#else
+               if(start > 15)
+               {
+                 printf(" out of range (0..15)\n");
+               }
+#endif
+               else
+               {
+                if (tracelevel < 3)
+                {
+                   printf("\n disabled (use trace 3)\n");
+                }
+                else
+                {
+                  power_fboot();
+                  SS_ENABLEFLASHBOOT;
+                  for(uint8_t i=0;i<4;i++)
+                  {
+                    waitbreq();
+                    printf("\nAddr: %x\n",sendfb(start+i));
+                    waitbreq();
+                    sendfb(0x0012);
+                  }
+                  SS_DISABLE;
+                  uart_eol();
+                }
+              }
+       }
 }
 #endif
 

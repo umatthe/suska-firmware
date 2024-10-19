@@ -16,5 +16,9 @@
 void shell_asread(uint8_t *fname);
 void shell_aswrite(uint8_t *fname);
 #endif
-void shell_asgetid( void);
+void shell_asgetid(void);
+void shell_aspowerdown(void);
+#ifdef HAVE_EE_AS_ENABLE
+void shell_asenable(uint8_t *val);
+#endif
 #endif

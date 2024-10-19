@@ -52,21 +52,31 @@ void shell_aswrite(uint8_t *fname)
 }
 #endif
 
+void shell_aspowerdown(void)
+{
+  
+		as_init(true);
+                as_cso_hi();
+                delayms(1);
+//                as_idle();
+                powerdownas(0); 
+                delayms(1);
+		as_init(false);
+}
+
 void shell_asgetid( void)
 {
 		uint8_t val;
 		uint32_t len;
 
 		as_init(true);
+#ifdef HAVE_EE_AS_ENABLE
+		uart_puts_P("AS-Active: ");
+                uart_puthexbyte(eeprom_read_byte(&ee_asactive));
+		uart_eol();
+#endif
 		printasstatus();
-		as_cso_lo();
-		as_write(SILICONID);
-		as_write(0);
-		as_write(0);
-		as_write(0);
-		val=as_read();
-		as_cso_hi();
-		as_init(false);
+                val=getasid();
 		uart_puts_P("Silicon-ID: ");
 		uart_puthexbyte(val);
 		uart_puts_P(" ");
@@ -74,39 +84,45 @@ void shell_asgetid( void)
 		switch(val)
 		{
 			case 0x10:
-				len=128L*1024L;
 				uart_puts_P("EPCS1");
 				break;
 		
 			case 0x12:
-				len=512L*1024L;
 				uart_puts_P("EPCS4");
 				break;
 
 			case 0x14:
-				len=2048L*1024L;
 				uart_puts_P("EPCS16");
 				break;
 		
 			case 0x15:
-				len=4096L*1024L;
 				uart_puts_P("EPCSQ32");
 				break;
 
 			case 0x16:
-				len=8192L*1024L;
 				uart_puts_P("EPCS64");
 				break;
 
 			default:
-				len=0;
 				uart_puts_P("** unknown **");
 				break;
 		}
 		uart_eol();
 		uart_puts_P("Size: 0x");
-		uart_puthexlong(len);
+		uart_puthexlong(getaslen());
 		uart_puts_P(" Byte");
 		uart_eol();
+		as_init(false);
 
 }
+#ifdef HAVE_EE_AS_ENABLE
+void shell_asenable( uint8_t *para )
+{
+        uint8_t asen;
+        sscanf(para,"%d",&asen);
+        uart_puts_P("Enable ");
+        uart_puthexbyte(asen);
+        uart_eol();
+        eeprom_write_byte(&ee_asactive, asen);
+}
+#endif

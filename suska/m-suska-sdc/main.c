@@ -23,6 +23,7 @@
 #include "../suska-iii/suskaspi.h"
 #include "../uart-irq/uart-irq.h"
 #include "../asisp/asisp.h"
+#include "../asisp/asappl.h"
 #include "../suska-iii/suskashell.h"
 #include "../coretype/coretypes.h"
 #include "../adc/adc.h"
@@ -176,6 +177,10 @@ int main(void)
         joystick_init();
 #endif
 #if defined SUSKA_BF | defined SUSKA_B | defined SUSKA_C
+#ifdef HAVE_EE_AS_ENABLE
+	as_init(true);
+        powerdownas( eeprom_read_byte(&ee_asactive));
+#endif
 	as_init(false);
 #endif
 	while(1)

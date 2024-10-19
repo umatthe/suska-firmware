@@ -26,7 +26,8 @@
 #define _MMC_CTRL_PORT_    PORTB
 #define _MMC_CTRL_DDR_     DDRB
 #define _MMC_ACTIVATE_     PB5
-//#define DEBUGMMC
+#define DEBUGMMC
+//#define DEBUGSDCARD
 
 // Configure SPI (zur SD-Card)
 #define SUSKAFLASH
@@ -68,6 +69,7 @@
 //#define get_fattime RTC_get_fattime
 
 // Configure ASISP
+//#define HAVE_EE_AS_ENABLE
 #define AS_IDLETIMEOUT (1000)
 #define AS_DDR         DDRA
 #define AS_PORT        PORTA

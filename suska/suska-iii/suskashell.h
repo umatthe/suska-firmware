@@ -17,7 +17,7 @@ void shell_usb(void);
 void shell_fread( uint8_t *o, uint8_t *l, uint8_t *n);
 void shell_fwrite( uint8_t *o, uint8_t *l);
 void shell_fdump( uint8_t *o, uint8_t *l);
-void shell_ferase(void);
+void shell_ferase(uint8_t *base);
 void shell_sd(uint8_t *n);
 void shell_ps2(void);
 #ifdef OSD

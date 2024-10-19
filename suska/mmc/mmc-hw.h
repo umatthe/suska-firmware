@@ -1,6 +1,10 @@
 #ifndef _MMCHW_H_
 #define _MMCWH_H_
 
+#ifdef DEBUGSDCARD
+#include "../uart-irq/uart-irq.h"
+#endif
+
 void mmc_hwinit(void);
 
 #ifndef _MMC_Write_
@@ -20,11 +24,22 @@ void mmc_hwinit(void);
 #define MMC_Enable()  _MMC_Write_&= ~_BV(_MMC_Chip_Select_)
 
 #ifdef SUSKA_BF 
-#define MMC_Off()   _MMC_CTRL_PORT_|=  _BV(_MMC_ACTIVATE_); // uart_puts_P("SD-OFF\n\r");
-#define MMC_On()  _MMC_CTRL_PORT_&= ~_BV(_MMC_ACTIVATE_);  //uart_puts_P("SD-ON\n\r");
+#ifdef DEBUGSDCARD
+#define MMC_Off()   _MMC_CTRL_PORT_|=  _BV(_MMC_ACTIVATE_);  uart_puts_P("SD-OFF\n\r");
+//#define MMC_Off()   uart_puts_P("SD-OFF Dummy BF\n\r");
+#define MMC_On()  _MMC_CTRL_PORT_&= ~_BV(_MMC_ACTIVATE_);  uart_puts_P("SD-ON\n\r");
+#else
+#define MMC_Off()   _MMC_CTRL_PORT_|=  _BV(_MMC_ACTIVATE_);
+#define MMC_On()  _MMC_CTRL_PORT_&= ~_BV(_MMC_ACTIVATE_);
+#endif
+#else
+#ifdef DEBUGSDCARD
+#define MMC_On()   uart_puts_P("SD-ON Dummy\n\r");
+#define MMC_Off()   uart_puts_P("SD-OFF Dummy\n\r");
 #else
 #define MMC_On() 
 #define MMC_Off()
+#endif
 #endif
 
 #ifdef _MMC_INH_

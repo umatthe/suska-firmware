@@ -30,7 +30,7 @@ void mmc_hwinit( void )
 
 #ifdef _MMC_CTRL_DDR_
 	 _MMC_CTRL_DDR_  |= _BV(_MMC_ACTIVATE_);
-//	 _MMC_CTRL_PORT_ &= ~_BV(_MMC_ACTIVATE_); // Suska-BF Low = PowerOn
+//	 _MMC_CTRL_PORT_ &= ~_BV(_MMC_ACTIVATE_); // Suska-BF Low = PowerOn (will be switched on in mmc_init) 
 #endif
         _MMC_DDR_ |= _BV(_MMC_Chip_Select_);
 }

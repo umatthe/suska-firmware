@@ -9,6 +9,10 @@
 
 #include "asisp.h"
 
+#ifdef HAVE_EE_AS_ENABLE
+#include <avr/eeprom.h>
+uint8_t ee_asactive EEMEM;
+#endif
 
 uint8_t as_confdone( void )
 {
@@ -35,7 +39,7 @@ uint8_t as_init( bool access )
 		AS_PORT&=~(AS_FPGACE); 
 #if (defined SUSKA_BF) | (defined SUSKA_B) 
 	        AS_PORT|= (AS_CONFIG);
-		AS_DDR&=~(AS_DCLK|AS_CSO|AS_DO|AS_FPGACE);
+		AS_DDR&=~(AS_DCLK|AS_CSO|AS_DO|AS_FPGACE|AS_CONFIG);
 #else
 		AS_DDR&=~(AS_DCLK|AS_CSO|AS_DO|AS_FPGACE);
 #endif

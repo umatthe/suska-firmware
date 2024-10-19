@@ -31,9 +31,9 @@
 #define _MMC_Write_        PORTB
 #define _MMC_DDR_          DDRB
 #define _MMC_Chip_Select_  PB7
-//#define DEBUGMMC
-//#define USEUART
-//#define USEUARTDEBUG
+#define DEBUGMMC
+#define USEUARTDEBUG
+#define DEBUGSDCARD
 // Configure SPI
 #define USE_SoftSPI
 #define SoftSPI_DDR    DDRB
@@ -77,6 +77,7 @@
 //#define get_fattime RTC_get_fattime
 
 // Configure ASISP
+//#define HAVE_EE_AS_ENABLE
 #define AS_IDLETIMEOUT (1000)
 #define AS_DDR         DDRA
 #define AS_PORT        PORTA
