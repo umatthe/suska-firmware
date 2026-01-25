@@ -71,7 +71,7 @@ void as_writedisable( void );
 void as_writestatus( uint8_t x );
 uint8_t as_readstatus( void );
 uint8_t as_idle( void );
-void as_erase( void );
+uint8_t as_erase( void );
 void as_write256start(uint32_t addr);
 void as_write256done( void );
 

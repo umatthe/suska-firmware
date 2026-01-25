@@ -122,6 +122,7 @@ ifeq ($(BOARD),SUSKA_BF)
 	OBJECTS += ../suska-iii/timer_overflow.o
 	OBJECTS += ../suska-iii/osd.o
 	OBJECTS += ../suska-iii/joystick.o
+        OBJECTS += ../config/configshell.o 
 endif
 ifeq ($(BOARD),SUSKA_B)
 	OBJECTS += ../suska-iii/ps2int.o

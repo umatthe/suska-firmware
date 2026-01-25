@@ -27,6 +27,9 @@
 #if defined KEYSPI
 #define SS_ENABLEKEY          SuskaSSSPI_PORT&=~(_BV(SuskaSPI_SS1)|_BV(SuskaSPI_SS0))                   // 100
 #endif
+#if defined HAVE_EE_CONFIG
+#define SS_ENABLECONFIG       SuskaSSSPI_PORT&=~(_BV(SuskaSPI_SS2)|_BV(SuskaSPI_SS1))                   // 001
+#endif
 #endif //USE_SSS
 
 #ifdef BOOT_SD_AVR_EN
@@ -64,5 +67,8 @@ void Suskaspi_send_n(unsigned char value, unsigned short cnt);
 
 #ifdef KEYSPI
 void keyboard_sendspi(uint8_t sendkey, uint8_t key);
+#endif
+#ifdef HAVE_EE_CONFIG
+void config_sendspi(uint8_t config1, uint8_t config2);
 #endif
 #endif

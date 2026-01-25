@@ -28,6 +28,10 @@
 #ifdef PUZZLE
 void shell_puzzle(uint8_t *rounds);
 #endif
+#ifdef HAVE_EE_CONFIG
+#include "../config/configshell.h"
+#endif
+
 
 //#define F(X) (const __flash char[]) { X }
 
@@ -38,7 +42,7 @@ void shell_puzzle(uint8_t *rounds);
 #ifdef HAVE_EE_AS_ENABLE
 #define MAXCOMMAND 26+1+2 
 #else
-#define MAXCOMMAND 26+2 
+#define MAXCOMMAND 26+2+2 /* HAVE_EE_CONFIG ist fix mit 2 dabei */ 
 #endif
 #define MAXCMDLEN 8 
 #define MAXHELPLEN 30
@@ -118,6 +122,11 @@ const __flash struct befehle befehle[MAXCOMMAND] =
 	{2,             F("f-write"), shell_fwrite,    F("f-write offset fromfile")},
 	{2,             F("f-dump"),  shell_fdump,     F("f-dump offset len")},
 #endif
+
+#ifdef HAVE_EE_CONFIG
+        {1,             F("c-set"), shell_setconfig, F("c-set Value")},
+        {0,             F("c-get"), shell_getconfig, F("c-get")},
+#endif
 //
 // Image File z.B. Multcomp
 //
@@ -139,6 +148,6 @@ const __flash struct befehle befehle[MAXCOMMAND] =
 //
 // Ende Kennung (nicht loeschen)
 //
-	{0, NULL, NULL,  NULL },
+	{0, 0, NULL,  0 },
 };
 #endif

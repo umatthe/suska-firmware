@@ -94,6 +94,15 @@ uint32_t getaslen( void )
 			len=8192L*1024L;
 		break;
 
+		case 0x17:
+			len=8192L*1024L;
+		break;
+
+                //UMA Hack FF for Micron Assume 8M
+                case 0xff:
+			len=8192L*1024L;
+		break;
+
 		default:
 			len=0;
 		break;
@@ -203,8 +212,14 @@ void flashaswrite(uint8_t *fname, uint32_t ctaddr,uint8_t endian)
 		as_init(true);
 		uart_puts_P("FLash: erasing ... ");
 		led_off();
-		as_erase();
-		uart_puts_P("done\n\r");
+		if(as_erase())
+                {
+		  uart_puts_P("done\n\r");
+                }
+                else
+                {
+		  uart_puts_P("error\n\r");
+                }
 		len=0;	
 
                 while(1)

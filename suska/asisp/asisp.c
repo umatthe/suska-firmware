@@ -135,7 +135,7 @@ uint8_t as_idle( void )
 		return 0;
 }
 
-void as_erase( void )
+uint8_t as_erase( void )
 {
 	uint8_t val;
 	as_idle();
@@ -143,7 +143,7 @@ void as_erase( void )
 	as_cso_lo();
 	as_write(ERASEBULK);
 	as_cso_hi();
-	as_idle();
+	return as_idle();
 }
 
 void as_write256start(uint32_t addr)

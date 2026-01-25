@@ -1,6 +1,6 @@
 // SDC-Controller Suska-III-BF
 //#include "avr-names.h"
-#define BOARDTYPE "Suska-III-BF"
+#define BOARDTYPE "Suska-III/IV-B*"
 
 //#define SWVERSION 0x20200608
 //
@@ -70,7 +70,7 @@
 
 // Configure ASISP
 //#define HAVE_EE_AS_ENABLE
-#define AS_IDLETIMEOUT (1000)
+#define AS_IDLETIMEOUT (6000)
 #define AS_DDR         DDRA
 #define AS_PORT        PORTA
 #define AS_PIN         PINA
@@ -219,4 +219,6 @@
 #define R2 10000.0
 #define FACTOR (1023/1.1)
 #define ADC_CHANNEL 0
+
+#define HAVE_EE_CONFIG 1
 

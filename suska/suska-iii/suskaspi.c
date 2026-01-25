@@ -240,3 +240,13 @@ void keyboard_sendspi(uint8_t sendkey, uint8_t key)
 }
 #endif
 
+#ifdef HAVE_EE_CONFIG
+void config_sendspi(uint8_t config1, uint8_t config2)
+{
+        SS_ENABLECONFIG;
+        Suskaspi_send(config1);
+        Suskaspi_send(config2);
+        SS_DISABLE;
+//      _delay_ms(20);
+}
+#endif
