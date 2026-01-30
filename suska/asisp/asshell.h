@@ -13,7 +13,7 @@
 #include "config.h"
 
 #ifdef __HAVE_FILESYSTEM__
-void shell_asread(uint8_t *fname);
+void shell_asread(uint8_t *fname, uint8_t *flen);
 void shell_aswrite(uint8_t *fname);
 #endif
 void shell_asgetid(void);

@@ -39,6 +39,14 @@ void show_suska_subtype( void );
 //Subcoretype CT_SUSKA_BF_FALCON lower 8 Bit
 // See CT_SUSKA_C_STE
 
+#define CT_SUSKA_IV_B_STE    0x06
+//Subcoretype CT_SUSKA_BF_STE lower 8 Bit
+// See CT_SUSKA_C_STE
+
+#define CT_SUSKA_IV_B_FALCON 0x07
+//Subcoretype CT_SUSKA_BF_FALCON lower 8 Bit
+// See CT_SUSKA_C_STE
+
 #define CT_ARCADE   0x10
 //Subcoretype CT_ARCADE lower 8 Bit
 #define ST_INVADERS 0x00

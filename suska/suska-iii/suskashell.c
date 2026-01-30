@@ -74,7 +74,7 @@ static uint16_t swap( uint16_t in)
         return (in<<8|((in>>8)&0xff));
 }
 
-static void fpgainfo(void)
+void fpgainfo(void)
 {
 #ifdef USE_SUSKASPI
           fpgaversion=readFpgaVersion(&fpgatype);
@@ -173,11 +173,13 @@ void shell_info( void)
                     show_suska_subtype();
                     break;
                case CT_SUSKA_BF_FALCON:
+               case CT_SUSKA_IV_B_FALCON:
                     uart_puts_P(BOARDTYPE);
                     uart_puts_P(" FALCON ");
                     show_suska_subtype();
                     break;
                case CT_SUSKA_BF_STE:
+               case CT_SUSKA_IV_B_STE:
                     uart_puts_P(BOARDTYPE);
                     uart_puts_P(" STE ");
                     show_suska_subtype();
@@ -442,12 +444,12 @@ void shell_ferase( uint8_t *base )
                 }
                 else
                 {
-                  power_fboot();
                   SS_ENABLEFLASHBOOT;
+                  power_fboot();
                   for(uint8_t i=0;i<4;i++)
                   {
                     waitbreq();
-                    printf("\nAddr: %x\n",sendfb(start+i));
+                    printf("\nAddr: %x\n",sendfb((start<<2)+i));
                     waitbreq();
                     sendfb(0x0012);
                   }

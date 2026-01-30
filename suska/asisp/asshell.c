@@ -29,20 +29,27 @@
 
 extern uint32_t tracelevel;
 
-	
+
 #ifdef __HAVE_FILESYSTEM__
-void shell_asread(uint8_t *fname)
+void shell_asread(uint8_t *fname, uint8_t *flen)
 {
 
 	uint32_t len;
-
-	len=getaslen();
+        if(strncmp(flen,"all",3) == 0)
+        {
+	  len=getaslen();
+        }
+        else
+        {
+          sscanf(flen,"%ld",&len);
+        }
 	if(tracelevel>1) 
 	{
 		uart_puts_P("Fixed Parameter: len, using len= ");
 		uart_puthexlong(len);
 		uart_eol();
 	}
+
 	flashassave(fname,len,0,0); // Start 0 / Endian 0
 }
 
@@ -102,10 +109,17 @@ void shell_asgetid( void)
 			case 0x16:
 				uart_puts_P("EPCS64");
 				break;
+			case 0x17:
+				uart_puts_P("W25Q128");
+				break;
+			case 0xff:
+				uart_puts_P("assume Micron");
+				break;
 
 			default:
 				uart_puts_P("** unknown **");
 				break;
+
 		}
 		uart_eol();
 		uart_puts_P("Size: 0x");
