@@ -27,9 +27,15 @@ Suska-III-BF:
 - System-Controller Atmega649a-16MHz  (disable JTAG PF7..PF4 may be used by SW)
   Lock=0x3F LFuse=0xEF HFuse=0xD7 EFuse=0xFF
 
+Suska-IV-B*:
+------------
+- Same binary as Suska-III-BF
+
+### Important: remove the micro SD card before flashing the AVR! ###
+
 Howto Flash via avrdude:
 ------------------------
-Suska-BF: avrdude -c avrispmkII -p m649 -U f:w:system-bf.hex -F
-Suska-B:  avrdude -c avrispmkII -p m644 -U f:w:system-b.hex
-Suska-C: avrdude -c avrispmkII -p m644 -U f:w:sdc-c.hex
-
+Suska-III-BF: avrdude -c avrispmkII -p m649 -U f:w:bin/suska-bf/system-bf.hex -P usb -F
+Suska-III-B:  avrdude -c avrispmkII -p m644 -U f:w:bin/suska-iii-b/system-b.hex -P usb
+Suska-III-C:  avrdude -c avrispmkII -p m644 -U f:w:bin/suska-iii-C/sdc-c.hex -P usb
+Suska-IV-B*:  avrdude -c avrispmkII -p m649 -U f:w:bin/suska-bf/system-bf.hex -P usb -F

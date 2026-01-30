@@ -31,4 +31,7 @@ void shell_joy( uint8_t *level);
 #ifdef SPIRAM
 void shell_rwrite( uint8_t *o, uint8_t *l);
 #endif
+#ifdef USE_SUSKASPI
+void fpgainfo(void);
+#endif
 #endif

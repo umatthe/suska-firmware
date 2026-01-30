@@ -27,6 +27,9 @@
 #include "../suska-iii/suskashell.h"
 #include "../coretype/coretypes.h"
 #include "../adc/adc.h"
+#ifdef HAVE_EE_CONFIG
+#include "../config/configshell.h"
+#endif
 
 #if defined (SUSKA_BF) | defined (SUSKA_B)
 #include "../suska-iii/joystick.h"
@@ -81,7 +84,7 @@ int main(void)
         // led_on()  == High == RS232
         // led_off() == Low  == Uart
         // todo: Add command to change setting from fpga-shell.
-        led_on();
+        led_off();
 #endif
 #endif
 
@@ -182,6 +185,9 @@ int main(void)
         powerdownas( eeprom_read_byte(&ee_asactive));
 #endif
 	as_init(false);
+#endif
+#ifdef HAVE_EE_CONFIG
+        sendconfig();
 #endif
 	while(1)
 	{

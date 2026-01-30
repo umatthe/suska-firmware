@@ -9,9 +9,14 @@
 #endif
 #ifdef USE_SUSKASPI
 #include "suskaspi.h"
+#include "../suska-iii/suskashell.h"
 #else
 #define BOOTAVR_ENABLE
 #define BOOTAVR_DISABLE
+#endif
+
+#ifdef HAVE_EE_CONFIG
+#include "../config/configshell.h"
 #endif
 
 #if defined SD_IMAGEFILE
@@ -112,6 +117,12 @@ void set_reset_pin(uint8_t on)
 	   {
              RESET_PORT&=~_BV(RESET);   // Set to 0
 	     uart_puts_P(" r0 ");
+#ifdef HAVE_EE_CONFIG
+             sendconfig();
+#endif
+#ifdef USE_SUSKASPI
+             fpgainfo();
+#endif
 	   }
 }
 
