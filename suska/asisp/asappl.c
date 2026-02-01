@@ -111,6 +111,45 @@ uint32_t getaslen( void )
 
 }
 
+uint32_t checkaslen( void )
+{
+        uint8_t p;
+	uint32_t count=0;
+	uint32_t len;
+	uint32_t fsize;
+                
+                fsize=getaslen();
+
+                as_init(true);
+                as_cso_lo();
+                as_write(READ);
+                as_write(0);
+                as_write(0);
+                as_write(0);
+                len=0;
+                for(uint32_t l=0;l<fsize;l++)
+                {
+                        p=as_read();
+                        //UMA dont care FF==FF if(endian==0) p=mirror(p); //LowBit first
+                        if (p != 0xff)
+                        {
+                          len=count;
+                        } 
+                        count++;
+                        if(!(count%(512L<<3)))
+                        {
+                                uart_puts_P("F-checking  0x");
+                                uart_puthexword(count>>10);
+                                uart_puts_P(" KB\r");
+                        }
+                }
+                as_cso_hi();
+                as_init(false);
+
+
+        return len;
+}
+
 uint8_t mirror(uint8_t in)
 {
 	uint8_t out=0;

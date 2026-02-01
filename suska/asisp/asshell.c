@@ -39,6 +39,10 @@ void shell_asread(uint8_t *fname, uint8_t *flen)
         {
 	  len=getaslen();
         }
+        else if(strncmp(flen,"used",4) == 0)
+        {
+	  len=checkaslen();
+        }
         else
         {
           sscanf(flen,"%ld",&len);
@@ -49,8 +53,15 @@ void shell_asread(uint8_t *fname, uint8_t *flen)
 		uart_puthexlong(len);
 		uart_eol();
 	}
-
-	flashassave(fname,len,0,0); // Start 0 / Endian 0
+        if(len>0)
+        {
+	  flashassave(fname,len,0,0); // Start 0 / Endian 0
+        }
+        else
+	{
+		uart_puts_P("skipped: len==0");
+		uart_eol();
+	}
 }
 
 void shell_aswrite(uint8_t *fname)
