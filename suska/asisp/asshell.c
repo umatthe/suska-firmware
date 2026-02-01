@@ -34,7 +34,7 @@ extern uint32_t tracelevel;
 void shell_asread(uint8_t *fname, uint8_t *flen)
 {
 
-	uint32_t len;
+	uint32_t len=0;
         if(strncmp(flen,"all",3) == 0)
         {
 	  len=getaslen();
@@ -49,7 +49,7 @@ void shell_asread(uint8_t *fname, uint8_t *flen)
         }
 	if(tracelevel>1) 
 	{
-		uart_puts_P("Fixed Parameter: len, using len= ");
+		uart_puts_P("len= ");
 		uart_puthexlong(len);
 		uart_eol();
 	}
@@ -59,8 +59,7 @@ void shell_asread(uint8_t *fname, uint8_t *flen)
         }
         else
 	{
-		uart_puts_P("skipped: len==0");
-		uart_eol();
+		uart_puts_P("skipped: len==0\r\n");
 	}
 }
 

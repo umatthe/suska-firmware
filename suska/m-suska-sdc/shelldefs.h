@@ -99,7 +99,7 @@ const __flash struct befehle befehle[MAXCOMMAND] =
 // Ab hier spezielle Befehle (aus asisp)
 //
 #if defined AS_CONFIG
-	{2,             F("as-read"),  shell_asread,   F("read ConfigFlash len/all")},
+	{2,             F("as-read"),  shell_asread,   F("read ConfigFlash len/all/used")},
 	{1,             F("as-write"), shell_aswrite,  F("write .rbf file to ConfigFlash")},
 	{0,             F("as-getid"), shell_asgetid,  F("ConfigFlash Info")},
 	{0,             F("as-off"), shell_aspowerdown,  F("ConfigFlash powerdown")},

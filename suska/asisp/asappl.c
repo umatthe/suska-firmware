@@ -95,12 +95,12 @@ uint32_t getaslen( void )
 		break;
 
 		case 0x17:
-			len=8192L*1024L;
+			len=16384L*1024L;
 		break;
 
                 //UMA Hack FF for Micron Assume 8M
                 case 0xff:
-			len=8192L*1024L;
+			len=16384L*1024L;
 		break;
 
 		default:
@@ -115,7 +115,7 @@ uint32_t checkaslen( void )
 {
         uint8_t p;
 	uint32_t count=0;
-	uint32_t len;
+	uint32_t len=0;
 	uint32_t fsize;
                 
                 fsize=getaslen();
@@ -145,7 +145,7 @@ uint32_t checkaslen( void )
                 }
                 as_cso_hi();
                 as_init(false);
-
+                uart_eol();
 
         return len;
 }
