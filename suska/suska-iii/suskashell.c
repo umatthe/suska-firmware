@@ -264,23 +264,38 @@ void shell_fdump( uint8_t *o, uint8_t *l)
         uint8_t b;
         uint16_t data;
 
-        BOOTAVR_ENABLE;
-        power_fboot();
 
         sscanf(o,"%ld",&offset);
         sscanf(l,"%ld",&len);
-        SS_ENABLEFLASHBOOT;
-        waitbreq();
-        printf("\nAddr: %x\n",sendfb(offset));
-
-        waitbreq();
-        printf("CMD: %x\n",sendfb(0x0017));
-//UMA        printf("-- %08lx %08lx\n",(offset<<8),len);
-        printf("-- %08lx %08lx\n",(offset),len);
-        printf("FLASH Dump\n");
-
-        for(uint32_t i=0; i<len;i++)
+#ifdef SUSKA_C
+        if(offset !=0)
         {
+          printf(" out of range (use 0, select Slot with dipswitches)\n");
+        }
+
+#else
+#ifdef SUSKA_BF
+        if(offset > 31) printf(" out of range (0..31)\n");
+#else
+        if(offset > 15) printf(" out of range (0..15)\n");
+#endif
+#endif
+        else
+        {
+          offset<<=10; /* 512k Slots */
+          BOOTAVR_ENABLE;
+          power_fboot();
+          SS_ENABLEFLASHBOOT;
+          waitbreq();
+          printf("\nAddr: %x\n",sendfb(offset));
+
+          waitbreq();
+          printf("CMD: %x\n",sendfb(0x0017));
+          printf("-- %08lx %08lx\n",(offset),len);
+          printf("FLASH Dump\n");
+
+          for(uint32_t i=0; i<len;i++)
+          {
                 if(!(i%8))
                 {
                        uart_eol();
@@ -291,9 +306,10 @@ void shell_fdump( uint8_t *o, uint8_t *l)
                 data=sendfb(0xaffe);
                 uart_puthexword(data);
                 uart_puts_P(" ");
+          }
+          SS_DISABLE;
+          uart_eol();
         }
-        SS_DISABLE;
-        uart_eol();
 }
 void shell_fread( uint8_t *o, uint8_t *l, uint8_t *n)
 {
@@ -311,24 +327,39 @@ void shell_fread( uint8_t *o, uint8_t *l, uint8_t *n)
 
         sscanf(o,"%ld",&offset);
         sscanf(l,"%ld",&len);
-
-        f_mount(0, &fs);
-        res = f_open(&handle, n, FA_CREATE_ALWAYS | FA_WRITE);
-
-        BOOTAVR_ENABLE;
-        SS_ENABLEFLASHBOOT;
-        power_fboot();
-
-        waitbreq();
-        sendfb(offset);
-
-        waitbreq();
-        sendfb(0x0017);
-        printf("\n-- %08lx %08lx %s\n",(offset<<8),len,n);
-        printf("FLASH Read\n");
-
-        for(uint32_t i=0; i<len;i++)
+#ifdef SUSKA_C
+        if(offset !=0)
         {
+          printf(" out of range (use 0, select Slot with dipswitches)\n");
+        }
+
+#else
+#ifdef SUSKA_BF
+        if(offset > 31) printf(" out of range (0..31)\n");
+#else
+        if(offset > 15) printf(" out of range (0..15)\n");
+#endif
+#endif
+        else
+        {
+          offset<<=10; /* 512k Slots */
+          f_mount(0, &fs);
+          res = f_open(&handle, n, FA_CREATE_ALWAYS | FA_WRITE);
+
+          BOOTAVR_ENABLE;
+          SS_ENABLEFLASHBOOT;
+          power_fboot();
+
+          waitbreq();
+          sendfb(offset);
+
+          waitbreq();
+          sendfb(0x0017);
+          printf("\n-- %08lx %08lx %s\n",(offset<<8),len,n);
+          printf("FLASH Read\n");
+
+          for(uint32_t i=0; i<len;i++)
+          {
                 data=sendfb(0xaffe);
                 atad=swap(data);
                 res = f_write(&handle, &atad, sizeof(atad), &bw);
@@ -339,10 +370,11 @@ void shell_fread( uint8_t *o, uint8_t *l, uint8_t *n)
                     uart_puts_P(" KB\r");
                 }
 
+          }
+          printf("\nReading done\n");
+          SS_DISABLE;
+          f_close(&handle);
         }
-        printf("\nReading done\n");
-        SS_DISABLE;
-        f_close(&handle);
 }
 
 void shell_fwrite( uint8_t *o, uint8_t *n)
@@ -361,29 +393,45 @@ void shell_fwrite( uint8_t *o, uint8_t *n)
 
 
         sscanf(o,"%ld",&offset);
-
-        f_mount(0, &fs);
-        fres = f_open(&handle, n, FA_READ);
-        if(fres!=FR_OK)
+#ifdef SUSKA_C
+        if(offset !=0)
         {
-         printf("fopen failed\n");
+          printf(" out of range (use 0, select Slot with dipswitches)\n");
         }
+
+#else
+#ifdef SUSKA_BF
+        if(offset > 31) printf(" out of range (0..31)\n");
+#else
+        if(offset > 15) printf(" out of range (0..15)\n");
+#endif
+#endif
         else
         {
-        BOOTAVR_ENABLE;
-        SS_ENABLEFLASHBOOT;
-        power_fboot();
+          offset<<=10; /* 512k Slots */
 
-        waitbreq();
-        sendfb(offset);
+          f_mount(0, &fs);
+          fres = f_open(&handle, n, FA_READ);
+          if(fres!=FR_OK)
+          {
+           printf("fopen failed\n");
+          }
+          else
+          {
+          BOOTAVR_ENABLE;
+          SS_ENABLEFLASHBOOT;
+          power_fboot();
 
-        waitbreq();
-        sendfb(0x0020);
-        printf("\n-- %08lx %s\n",(offset<<8),n);
-        printf("FLASH Write\n");
+          waitbreq();
+          sendfb(offset);
 
-        while(1)
-        {
+          waitbreq();
+          sendfb(0x0020);
+          printf("\n-- %08lx %s\n",(offset<<8),n);
+          printf("FLASH Write\n");
+
+          while(1)
+          {
                 f_read(&handle, &atad, sizeof(atad), &flen);
                 if(flen!=2) break;
                 data=swap(atad);
@@ -397,10 +445,11 @@ void shell_fwrite( uint8_t *o, uint8_t *n)
                     uart_puts_P(" KB\r");
                 }
 
-        }
-        SS_DISABLE;
-        f_close(&handle);
-        printf("\nFLASH Writen (%ld Words)\n",count);
+          }
+          SS_DISABLE;
+          f_close(&handle);
+          printf("\nFLASH Writen (%ld Words)\n",count);
+          }
         }
 }
 void shell_ferase( uint8_t *base )
@@ -431,31 +480,26 @@ void shell_ferase( uint8_t *base )
                }
                
 #else
-               if(start > 15)
-               {
-                 printf(" out of range (0..15)\n");
-               }
+#ifdef SUSKA_BF
+               if(start > 31) printf(" out of range (0..31)\n");
+#else
+               if(start > 15) printf(" out of range (0..15)\n");
+#endif
 #endif
                else
                {
-                if (tracelevel < 3)
-                {
-                   printf("\n disabled (use trace 3)\n");
-                }
-                else
-                {
+                  start<<=10; /* 512k Slots */
                   SS_ENABLEFLASHBOOT;
                   power_fboot();
                   for(uint8_t i=0;i<4;i++)
                   {
                     waitbreq();
-                    printf("\nAddr: %x\n",sendfb((start<<2)+i));
+                    printf("\nAddr: %x\n",sendfb(start+(i*256)));
                     waitbreq();
                     sendfb(0x0012);
                   }
                   SS_DISABLE;
                   uart_eol();
-                }
               }
        }
 }

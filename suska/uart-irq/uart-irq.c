@@ -193,6 +193,15 @@ void noinline uart_puthexlong(uint32_t data)
 	uart_puthexword(data & 0x0000FFFF);
 }
 
+void noinline uart_putbinbyte(uint8_t data)
+{
+  for (uint8_t i=0; i<8; i++)
+  {
+      uart_putc('0'+((data&0x80)!=0));
+      data <<=1;
+  }
+}
+
 void noinline uart_putdecbyte(uint8_t data)
 {
 

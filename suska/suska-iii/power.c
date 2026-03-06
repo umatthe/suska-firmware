@@ -118,7 +118,7 @@ void set_reset_pin(uint8_t on)
              RESET_PORT&=~_BV(RESET);   // Set to 0
 	     uart_puts_P(" r0 ");
 #ifdef HAVE_EE_CONFIG
-             sendconfig();
+             sendramconfig();
 #endif
 #ifdef USE_SUSKASPI
              fpgainfo();

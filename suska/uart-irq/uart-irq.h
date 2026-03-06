@@ -180,6 +180,8 @@ void noinline uart_puthexlong(uint32_t data);
 /** output a byte in decimal */
 void noinline uart_putdecbyte(uint8_t data);
 
+void noinline uart_putbinbyte(uint8_t data);
+
 /** output eol (\r\n) */
 void noinline uart_eol(void);
 

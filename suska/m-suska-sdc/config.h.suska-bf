@@ -221,4 +221,4 @@
 #define ADC_CHANNEL 0
 
 #define HAVE_EE_CONFIG 1
-
+#define HW_CONFIG_MASK 0x03

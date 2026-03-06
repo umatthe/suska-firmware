@@ -187,7 +187,7 @@ int main(void)
 	as_init(false);
 #endif
 #ifdef HAVE_EE_CONFIG
-        sendconfig();
+        initconfig();
 #endif
 	while(1)
 	{

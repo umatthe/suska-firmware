@@ -39,10 +39,19 @@ void shell_puzzle(uint8_t *rounds);
 //
 // Anzahl der implementierten Kommandos +2
 //
-#ifdef HAVE_EE_AS_ENABLE
-#define MAXCOMMAND 26+1+2 
-#else
-#define MAXCOMMAND 26+2+2 /* HAVE_EE_CONFIG ist fix mit 2 dabei */ 
+
+#ifdef HAVE_EE_CONFIG
+# ifdef HAVE_EE_AS_ENABLE
+#  define MAXCOMMAND 26+2+1+5 
+# else
+#  define MAXCOMMAND 26+2+5
+# endif
+# else
+# ifdef HAVE_EE_AS_ENABLE
+#  define MAXCOMMAND 26+2+1 
+# else
+#  define MAXCOMMAND 26+2 
+# endif
 #endif
 #define MAXCMDLEN 8 
 #define MAXHELPLEN 30
@@ -118,14 +127,17 @@ const __flash struct befehle befehle[MAXCOMMAND] =
 // Ab hier Flash Stuff
 //
 	{1,             F("f-erase"), shell_ferase,    F("f-erase 512k-Slot/all")},
-	{3,             F("f-read"),  shell_fread,     F("f-read offset len tofile")},
-	{2,             F("f-write"), shell_fwrite,    F("f-write offset fromfile")},
-	{2,             F("f-dump"),  shell_fdump,     F("f-dump offset len")},
+	{3,             F("f-read"),  shell_fread,     F("f-read 512k-Slot len tofile")},
+	{2,             F("f-write"), shell_fwrite,    F("f-write 512K-Slot fromfile")},
+	{2,             F("f-dump"),  shell_fdump,     F("f-dump 512K-Slot len")},
 #endif
 
 #ifdef HAVE_EE_CONFIG
         {1,             F("c-set"), shell_setconfig, F("c-set Value")},
         {0,             F("c-get"), shell_getconfig, F("c-get")},
+        {1,             F("c-save"), shell_saveconfig, F("c-save mode")},
+        {2,             F("c-bit"), shell_bitconfig, F("c-bit bit val")},
+        {1,             F("c-cart"), shell_cartconfig, F("c-cart 512k-Slot")},
 #endif
 //
 // Image File z.B. Multcomp

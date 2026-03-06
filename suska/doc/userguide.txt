@@ -46,14 +46,17 @@ Just lists all available commands with short usage
 
 3.3 Commands for Handling of the TOS-Flash
 ------------------------------------------
-- f-dump flashoffset number-of-16bit-words
+- f-dump 512k-slot number-of-16bit-words
   Creates a hexdump of the flash area on the screen
-- f-erase
-  Erases the complete flash memory
-- f-read flashoffset number-of-16bit-words outfile
+- f-erase all|512k-slot
+  Parmeter "all" erases the complete flash memory.
+  The 512k-slot parameter only erases the selected slot.
+- f-read 512k-slot number-of-16bit-words outfile
   Creates a binary dump of the flash area on the SD-Card
-- f-write flashoffset number-of-16bit-words infile
+- f-write 512k-slot number-of-16bit-words infile
   fills the flasharea with the content of the file on the SD-Card
+The 512K-Slots 0..15 are used for 16 TOS-Images (selected by the switches on the board).
+The 512K-Slots 16..31 are used for 16 Cartridges (selected by the c-cart command).
 
 A typical workflow to fill the TOS-Flash (on Suska-III-B/BF):
 - create a Raw-TOS-file containing a concatination of up to 16 512k TOS files
@@ -68,7 +71,23 @@ A typical workflow to fill the TOS-Flash (on Suska-III-C):
 - 3. write to flash:    f-write 0 tosfile.img
 - 4. repeat from 2. until all Tos images are flashed
 
-3.4 Common Commands
+3.4 Config Core Commands
+------------------------
+- c-get
+  retrieves the currrent state of the Config Bits.
+- c-set dec-word
+  sets all Config Bits with the value of dec-word
+- c-bit bit val
+  sets/clears the bit in the Config Array according val (1|0)
+- c-cart 512k_Slot (range 16..31)
+  sets the Config Bits to activate the 512k Slot.
+- c-save user
+  makes the changes of any of the above comands permanent.
+  Mode "user" will not change the HW-Bits. 
+  To change the HW-Bits Mode "suska" is needed. Do not use Mode "suska" if you
+  are not 100% sure what You are doing.
+
+3.5 Common Commands
 -------------------
 - info
 Displays some information about the FPGA and Firmware
@@ -97,7 +116,7 @@ Remark: On Suska-III-B(F) the "#"-key will power up the System (again).
   level == 0 means corereset inactive
   level == 2 generates a 0.5 sec corereset pulse
 
-3.5 Other Commands
+3.6 Other Commands
 ------------------
 There may be some other commands available in the fpga-shell.
 The help command will give a complete list. The commands not
